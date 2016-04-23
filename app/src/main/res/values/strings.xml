@@ -25,4 +25,9 @@
     <string name="articles">Articles</string>
     <string name="settings">Settings</string>
     <string name="publication_date">Publication date</string>
+
+    <string name="choose_subjects">Choose subjects</string>
+    <string name="subjects">Subjects</string>
+    <string name="next">Next</string>
+    <string name="please_select_subjects">Please select at least one subject:</string>
 </resources>

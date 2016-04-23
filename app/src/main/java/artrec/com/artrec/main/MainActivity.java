@@ -1,5 +1,6 @@
 package artrec.com.artrec.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,9 +15,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.journal.JournalFragment;
+import artrec.com.artrec.login.LoginActivity;
 import artrec.com.artrec.models.Article;
 
 public class MainActivity extends AppCompatActivity
@@ -24,12 +27,26 @@ public class MainActivity extends AppCompatActivity
 
     public static MainActivity INSTANCE;
     private Menu optionsMenu;
+    NavigationView navigationView;
+    int userId;
+    String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         INSTANCE = this;
+        Intent intent = getIntent();
+
+        this.userId = intent.getIntExtra("userid", 0);
+        this.username = intent.getStringExtra("username");
+
+        if(userId == 0) {
+            Intent newIntent = new Intent(this, LoginActivity.class);
+            startActivity(newIntent);
+            this.finish();
+        }
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,8 +65,18 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        try {
+            ((TextView) navigationView.findViewById(R.id.appNameTextViewMain)).setText(username.toUpperCase());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override
