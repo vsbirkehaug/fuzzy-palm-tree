@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     int userId;
     String username;
+    private static boolean journalSaveDone = false;
+    private static boolean subjectSaveDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,4 +175,15 @@ public class MainActivity extends AppCompatActivity
         }
         fragmentManager.beginTransaction().replace(R.id.mainContent, fragment).commit();
     }
+
+    public static boolean setJournalSaveDone(boolean journalSaveDone) {
+        MainActivity.journalSaveDone = journalSaveDone;
+        return journalSaveDone&&subjectSaveDone;
+    }
+
+    public static boolean setSubjectSaveDone(boolean subjectSaveDone) {
+        MainActivity.subjectSaveDone = subjectSaveDone;
+        return journalSaveDone&&subjectSaveDone;
+    }
+
 }

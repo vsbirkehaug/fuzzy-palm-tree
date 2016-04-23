@@ -98,7 +98,7 @@ public class JournalPicker extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                saveSubjectsAndJournals();
             }
         });
 
@@ -112,21 +112,31 @@ public class JournalPicker extends AppCompatActivity {
         }
     }
 
-    private Integer[] getIdsFromJournals() {
-        Log.i("vilde", ""+selectedJournals.size());
-        Integer[] ids = new Integer[selectedJournals.size()];
+    private void saveSubjectsAndJournals() {
+        PostUserSubjectsAsyncTask uSubjects = new PostUserSubjectsAsyncTask(this);
+        uSubjects.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), subjectIds);
+        uSubjects.execute("http://192.168.0.13:8080/ArtRec/api/v1/userSubject");
 
-        for(int i = 0; i < selectedJournals.size(); i++) {
-            ids[i] = selectedJournals.get(i).getId();
-            Log.i("vilde", "selected id "+selectedJournals.get(i).getId());
-        }
-        return ids;
+        PostUserJournalsAsyncTask uJournals = new PostUserJournalsAsyncTask(this);
+        uJournals.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), getIdsFromJournals());
+        uJournals.execute("http://192.168.0.13:8080/ArtRec/api/v1/userJournal");
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         results = null;
+    }
+
+    private int[] getIdsFromJournals() {
+        Log.i("vilde", ""+selectedJournals.size());
+        int[] ids = new int[selectedJournals.size()];
+
+        for(int i = 0; i < selectedJournals.size(); i++) {
+            ids[i] = selectedJournals.get(i).getId();
+            Log.i("vilde", "selected id "+selectedJournals.get(i).getId());
+        }
+        return ids;
     }
 
     public void handleResults(ArrayList<Journal> journals) {

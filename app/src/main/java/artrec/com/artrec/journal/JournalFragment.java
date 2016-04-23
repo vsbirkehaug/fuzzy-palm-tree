@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
  */
 public class JournalFragment extends Fragment{
 
-    private final static String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllJournals";
+    private final static String url = "http://192.168.0.13:8080/ArtRec/api/v1/getJournals";
     private ListView journalList;
 
     public JournalFragment() {
@@ -40,7 +41,10 @@ public class JournalFragment extends Fragment{
 
         journalList = (ListView) view.findViewById(R.id.journalListView);
 
-        new GetJournalsAsyncTask(getActivity(), this).execute(url);
+        GetJournalsForUserAsyncTask task = new GetJournalsForUserAsyncTask(getActivity(), this);
+        Log.i("vilde", "userid getting journals: " + getActivity().getIntent().getIntExtra("userid", 0));
+        task.setUser(getActivity().getIntent().getIntExtra("userid", 0));
+        task.execute(url);
         return view;
     }
 

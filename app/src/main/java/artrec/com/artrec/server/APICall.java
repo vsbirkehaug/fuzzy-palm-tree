@@ -74,6 +74,43 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
         return result;
     }
 
+    protected String GETFORUSER(String url, int userId) {
+        InputStream inputStream;
+        String result = "";
+        try {
+
+            HttpClient httpclient = new DefaultHttpClient();
+
+            HttpGet get = new HttpGet(url);
+
+            get.addHeader("userid", String.valueOf(userId));
+            get.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            HttpResponse httpResponse = httpclient.execute(get);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+                Log.i("vilde", "The json result is: " + result);
+            } else {
+                //TODO error handling
+            }
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+        return result;
+    }
+
+
+    private String intArrayToString(int[] array) {
+        String stringIds = "";
+        for(int id : array) {
+            stringIds+= (String.valueOf(id)+",");
+        }
+        return stringIds;
+    }
 
     protected String GETJOURNALS(String url, int[] ids) {
         InputStream inputStream;
@@ -84,10 +121,7 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
 
             HttpGet get = new HttpGet(url);
 
-            String stringIds = "";
-            for(int id : ids) {
-                stringIds+= (String.valueOf(id)+",");
-            }
+            String stringIds = intArrayToString(ids);
             stringIds = stringIds.substring(0, stringIds.length()-2);
             Log.i("vilde", "sending string: " + stringIds);
 
@@ -194,6 +228,39 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
         }
         return result;
     }
+
+    protected String POSTUSERLINKS(String url, int userid, int[]ids) {
+        InputStream inputStream;
+        String result = "";
+        try {
+
+            String idString = intArrayToString(ids);
+
+            HttpClient httpclient = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(url);
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("userid", java.net.URLEncoder.encode(String.valueOf(userid), "UTF-8")));
+            params.add(new BasicNameValuePair("ids", java.net.URLEncoder.encode(idString, "UTF-8")));
+            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            HttpResponse httpResponse = httpclient.execute(post);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+                Log.i("vilde", "The json result is: " + result);
+            } else {
+                //TODO error handling
+            }
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+        return result;
+    }
+
 
 
     protected String convertInputStreamToString(InputStream inputStream) throws IOException {

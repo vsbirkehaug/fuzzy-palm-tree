@@ -57,6 +57,8 @@ public class SubjectPicker extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(subjectPicker, JournalPicker.class);
+                intent.putExtra("userid", getIntent().getIntExtra("userid", 0));
+                intent.putExtra("username", getIntent().getStringExtra("username"));
                 intent.putExtra("ids", getIdsFromSubjects());
                 startActivity(intent);
             }
