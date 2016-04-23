@@ -38,22 +38,26 @@ public class GetJournalsAsyncTask extends APICall {
     @Override
     protected void onPostExecute(String result) {
 
+
         try {
             resultJsonArray = new JSONArray(result);
 
             ArrayList<Journal> journals = new ArrayList<>();
 
-
             for (int i = 0; i < resultJsonArray.length(); i++) {
-                journals.add(new Journal(
-                        resultJsonArray.getJSONObject(i).getString("issn"),
-                        resultJsonArray.getJSONObject(i).getString("title"),
-                        resultJsonArray.getJSONObject(i).getString("url"),
-                        resultJsonArray.getJSONObject(i).getString("publisher"),
-                        resultJsonArray.getJSONObject(i).getString("rights")));
+                try {
+                    if(resultJsonArray.getJSONObject(i).has("issn"))
+                        journals.add(new Journal(
+                                resultJsonArray.getJSONObject(i).getString("issn"),
+                                resultJsonArray.getJSONObject(i).getString("title"),
+                                resultJsonArray.getJSONObject(i).getString("url"),
+                                resultJsonArray.getJSONObject(i).getString("publisher"),
+                                resultJsonArray.getJSONObject(i).getString("rights")));
+                }catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+                fragment.setJournalList(journals);
             }
-
-            fragment.setJournalList(journals);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -21,10 +21,20 @@ import static android.view.View.GONE;
  */
 public class ArticleFragment extends Fragment {
 
+    public static ArticleFragment INSTANCE;
+    private static ArrayList<Article> articles;
     private final static String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllArticlesForJournal?issn=";
     private ListView articleList;
 
     public ArticleFragment() {
+        INSTANCE = this;
+    }
+
+    public static Fragment getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new ArticleFragment();
+        }
+        return INSTANCE;
     }
 
     @Nullable
@@ -34,6 +44,10 @@ public class ArticleFragment extends Fragment {
 
         articleList = (ListView) view.findViewById(R.id.articleListView);
 
+        if(articles != null) {
+            articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, articles));
+        }
+
         return view;
     }
 
@@ -41,9 +55,10 @@ public class ArticleFragment extends Fragment {
         new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
     }
 
-    void setArticleList(ArrayList<Article> articles) {
+    void setArticleList(ArrayList<Article> resultArticles) {
+        articles = resultArticles;
         if(articles.size() > 0) {
-            articleList.setAdapter(new ArticleAdapter(this.getContext(), 0, articles));
+            articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, resultArticles));
         } else {
             articleList.setVisibility(GONE);
             TextView text = new TextView(getContext());

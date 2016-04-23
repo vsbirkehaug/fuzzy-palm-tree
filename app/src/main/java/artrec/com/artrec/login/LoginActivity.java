@@ -3,6 +3,7 @@ package artrec.com.artrec.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +33,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.main.MainActivity;
+import artrec.com.artrec.models.User;
+import artrec.com.artrec.server.APICall;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private AuthenticateUserAsyncCall mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
@@ -95,6 +101,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        Log.i("vilde", "Hash of \'vilde\' " + ValidateUser.computeSHAHash("vilde"));
     }
 
     private void populateAutoComplete() {
@@ -184,19 +192,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
-            mAuthTask.execute((Void) null);
+            mAuthTask = new AuthenticateUserAsyncCall(this);
+            mAuthTask.setCredentials(username, password);
+            mAuthTask.execute("192.168.0.13:8080/ArtRec/api/v1/user");
         }
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() >= 4;
     }
 
     /**
@@ -290,53 +294,68 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Aan asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
-        private final String mPassword;
+    private class AuthenticateUserAsyncCall extends APICall {
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
-            mPassword = password;
+        private String authUsername;
+        private String authPassword;
+
+
+        public AuthenticateUserAsyncCall(Activity parent) {
+            super(parent);
+        }
+
+        public void setCredentials(String username, String password) {
+            this.authUsername = username;
+            this.authPassword = password;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected String doInBackground(String... urls) {
 
-            try {
-                // Simulate network access.
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            String result = String.valueOf(GETUSER(this.authUsername, this.authPassword));
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
+            Log.i("vilde", "Result: " + result);
 
-            // TODO: register the new account here.
-            return true;
+            return result;
         }
 
+
+        // onPostExecute displays the results of the AsyncTask.
+        @SuppressWarnings("static-access")
         @Override
-        protected void onPostExecute(final Boolean success) {
+        protected void onPostExecute(String result) {
             mAuthTask = null;
             showProgress(false);
+            int id = 0;
+            User user = null;
+            try {
+                resultJsonArray = new JSONArray(result);
 
-            if (success) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                if(result != null) {
+                    for (int i = 0; i < resultJsonArray.length(); i++) {
+                        try {
+                            if(resultJsonArray.getJSONObject(i).has("id")) {
+                                id = resultJsonArray.getJSONObject(i).getInt("id");
+                            }
+                        }catch (JSONException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+
+                user = new User(id, authUsername);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if(id > 0) {
+                setUserAuthenticated(true, user);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                setUserAuthenticated(false, null);
             }
         }
 
@@ -346,5 +365,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+    private void setUserAuthenticated(boolean b, User user) {
+        if(b) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("userid", user.getId());
+            intent.putExtra("username", user.getUsername());
+            startActivity(intent);
+        } else {
+            mPasswordView.setError(getString(R.string.error_incorrect_password));
+            mPasswordView.requestFocus();
+        }
+    }
+
+
+
 }
 

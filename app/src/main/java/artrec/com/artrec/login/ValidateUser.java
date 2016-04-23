@@ -1,11 +1,16 @@
 package artrec.com.artrec.login;
 import android.util.Base64;
+import android.util.Log;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 /**
@@ -13,40 +18,46 @@ import java.sql.*;
  * @author Vilde
  */
 public class ValidateUser {
-    public static String getUser(String username, String password)
+
+    public static int NO_OPTIONS=0;
+
+
+    private static String convertToHex(byte[] data) throws java.io.IOException
     {
-        int userId = 1;
-        try{
+        StringBuffer sb = new StringBuffer();
+        String hex=null;
+        hex=Base64.encodeToString(data, 0, data.length, NO_OPTIONS);
 
+        sb.append(hex);
 
-/*            String formData = "username=<uname>&password=<pass>&grant_type=password";
-            String header = "Basic " + Base64.encodeToString("<client_id>:<client_secret>".getBytes(), Base64.URL_SAFE);
+        return sb.toString();
+    }
 
-            HttpURLConnection connection
-                    = (HttpURLConnection) new URL(tokenUrl).openConnection();
-            connection.setDoOutput(true);
-            connection.addRequestProperty("Authorization", header);
-            connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("charset", "utf-8");
-            connection.setRequestProperty("Content-Length", Integer.toString(formData.length()));
-
-            OutputStream out = connection.getOutputStream();
-            out.write(formData.getBytes(StandardCharsets.UTF_8));
-
-            InputStream in = connection.getInputStream();
-            AccessToken token = new ObjectMapper().readValue(in, AccessToken.class);
-            System.out.println(token);
-
-            out.close();
-            in.close();*/
-
-        }
-        catch(Exception e)
+    public static String computeSHAHash(String password)
+    {
+        String SHAHash = "";
+        MessageDigest mdSha1 = null;
+        try
         {
+            mdSha1 = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e1) {
+            Log.e("myapp", "Error initializing SHA1 message digest");
+        }
+        try {
+            mdSha1.update(password.getBytes("ASCII"));
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        byte[] data = mdSha1.digest();
+        try {
+            SHAHash=convertToHex(data);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
-        return String.valueOf(userId);
+        return SHAHash;
     }
+
 }

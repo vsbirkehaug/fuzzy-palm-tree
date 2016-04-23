@@ -13,7 +13,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
+import artrec.com.artrec.main.FragmentEnum;
 import artrec.com.artrec.main.MainActivity;
+import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Journal;
 import com.pkmmte.pkrss.PkRSS;
 
@@ -51,6 +53,7 @@ public class JournalFragment extends Fragment{
                 fragment.getArticlesForJournal(((Journal)view.getTag()).getIssn());
                 try {
                     MainActivity.INSTANCE.goToFragment(fragment);
+                    MainActivity.INSTANCE.setMenuItemEnabled(FragmentEnum.ARTICLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

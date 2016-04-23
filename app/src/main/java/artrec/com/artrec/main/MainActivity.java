@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.journal.JournalFragment;
+import artrec.com.artrec.models.Article;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -94,25 +95,25 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         Class fragmentClass;
 
-        switch(id) {
-            case R.id.nav_articles:
-                fragmentClass = ArticleFragment.class;
-                getSupportActionBar().setTitle(getString(R.string.articles));
-                break;
-            case R.id.nav_journals:
-                fragmentClass = JournalFragment.class;
-                getSupportActionBar().setTitle(getString(R.string.journals));
-                break;
-            case R.id.nav_manage:
-                fragmentClass = JournalFragment.class;
-                break;
-            default:
-                fragmentClass = JournalFragment.class;
-                break;
-        }
-
         try {
-            fragment = (Fragment) fragmentClass.newInstance();
+            switch (id) {
+                case R.id.nav_articles:
+                    fragment = ArticleFragment.getInstance();
+                    getSupportActionBar().setTitle(getString(R.string.articles));
+                    break;
+                case R.id.nav_journals:
+                    fragmentClass = JournalFragment.class;
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    getSupportActionBar().setTitle(getString(R.string.journals));
+                    break;
+                case R.id.nav_manage:
+                    fragmentClass = JournalFragment.class;
+                    break;
+                default:
+                    fragmentClass = JournalFragment.class;
+                    break;
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -124,8 +125,21 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void setMenuItemEnabled(FragmentEnum frag) {
+        switch(frag) {
+            case ARTICLE: {
+                optionsMenu.findItem(R.id.nav_articles).setChecked(true);
+                break;
+            }
+            case JOURNAL: {
+                optionsMenu.findItem(R.id.nav_journals).setChecked(true);
+                break;
+            }
+        }
+
+    }
+
     public void goToFragment(Fragment fragment) {
-        optionsMenu.getItem(0).setChecked(true);
         FragmentManager fragmentManager = getSupportFragmentManager();
         for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
             fragmentManager.popBackStack();
