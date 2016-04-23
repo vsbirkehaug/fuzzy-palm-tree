@@ -3,21 +3,21 @@ package artrec.com.artrec.models;
 /**
  * Created by Vilde on 23.04.2016.
  */
-public class SubjectListItem {
-    private Subject subject;
+public class JournalListItem {
+    private Journal journal;
     private boolean checked;
 
-    public SubjectListItem(Subject subject, boolean checked) {
-        this.subject = subject;
+    public JournalListItem(Journal journal, boolean checked) {
+        this.journal = journal;
         this.checked = checked;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public Journal getJournal() {
+        return journal;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setJournal(Journal journal) {
+        this.journal = journal;
     }
 
     public boolean getState() {

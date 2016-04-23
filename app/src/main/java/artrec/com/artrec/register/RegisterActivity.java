@@ -1,4 +1,4 @@
-package artrec.com.artrec.login;
+package artrec.com.artrec.register;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -31,23 +31,23 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import artrec.com.artrec.R;
-import artrec.com.artrec.main.MainActivity;
-import artrec.com.artrec.models.User;
-import artrec.com.artrec.register.RegisterActivity;
-import artrec.com.artrec.server.APICall;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import artrec.com.artrec.R;
+import artrec.com.artrec.main.MainActivity;
+import artrec.com.artrec.models.User;
+import artrec.com.artrec.server.APICall;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private AuthenticateUserAsyncCall mAuthTask = null;
+    private RegisterUserAsyncCall mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mUsernameView;
@@ -75,7 +75,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
+        setupActionBar();
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
         populateAutoComplete();
@@ -100,26 +101,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
-
-
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-
-        Log.i("vilde", "Hash of \'vilde\' " + ValidateUser.computeSHAHash("vilde"));
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Button mUsernameRegisterButton = (Button) findViewById(R.id.username_register_button);
-        final LoginActivity loginActivity = this;
-        mUsernameRegisterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(loginActivity, RegisterActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     private void populateAutoComplete() {
@@ -165,6 +148,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
+    /**
+     * Set up the {@link android.app.ActionBar}, if the API is available.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setupActionBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            // Show the Up button in the action bar.
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -194,7 +187,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid username.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
@@ -209,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new AuthenticateUserAsyncCall(this);
+            mAuthTask = new RegisterUserAsyncCall(this);
             mAuthTask.setCredentials(username, password);
             mAuthTask.execute("192.168.0.13:8080/ArtRec/api/v1/user");
         }
@@ -217,7 +210,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() >= 4;
+        return password.length() > 4;
     }
 
     /**
@@ -293,7 +286,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
+                new ArrayAdapter<>(RegisterActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mUsernameView.setAdapter(adapter);
@@ -310,18 +303,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+
     /**
      * Aan asynchronous login/registration task used to authenticate
      * the user.
      */
 
-    private class AuthenticateUserAsyncCall extends APICall {
+    private class RegisterUserAsyncCall extends APICall {
 
         private String authUsername;
         private String authPassword;
 
 
-        public AuthenticateUserAsyncCall(Activity parent) {
+        public RegisterUserAsyncCall(Activity parent) {
             super(parent);
         }
 
@@ -333,7 +327,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected String doInBackground(String... urls) {
 
-            String result = String.valueOf(GETUSER(this.authUsername, this.authPassword));
+            String result = String.valueOf(POSTUSER(this.authUsername, this.authPassword));
 
             Log.i("vilde", "Result: " + result);
 
@@ -385,7 +379,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private void setUserAuthenticated(boolean b, User user) {
         if(b) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SubjectPicker.class);
             intent.putExtra("userid", user.getId());
             intent.putExtra("username", user.getUsername());
             startActivity(intent);
@@ -394,8 +388,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mPasswordView.requestFocus();
         }
     }
-
-
 
 }
 

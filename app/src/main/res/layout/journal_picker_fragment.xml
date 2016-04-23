@@ -7,7 +7,7 @@
       >
 
     <ListView
-            android:id="@+id/subject_list"
+            android:id="@+id/journal_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:choiceMode="multipleChoice"
@@ -16,14 +16,14 @@
     />
 
     <RelativeLayout
-            android:id="@+id/subject_bottom_menu"
+            android:id="@+id/journal_bottom_menu"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:visibility="gone"
     >
 
         <Button
-                android:id="@+id/subject_next_button"
+                android:id="@+id/journal_next_button"
                 android:text="@string/next"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

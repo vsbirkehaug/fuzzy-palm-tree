@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import artrec.com.artrec.R;
+import artrec.com.artrec.models.JournalListItem;
 import artrec.com.artrec.models.SubjectListItem;
 
 import java.util.ArrayList;
@@ -14,22 +15,22 @@ import java.util.ArrayList;
 /**
  * Created by Vilde on 23.04.2016.
  */
-public class SubjectListAdapter extends ArrayAdapter<SubjectListItem> {
+public class JournalListAdapter extends ArrayAdapter<JournalListItem> {
 
-    CheckedTextView disciplineText;
+    CheckedTextView journalText;
 
-    public SubjectListAdapter(Context context, int textViewResourceId, ArrayList<SubjectListItem> objects) {
+    public JournalListAdapter(Context context, int textViewResourceId, ArrayList<JournalListItem> objects) {
         super(context, textViewResourceId, objects);
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.subject_picker_list_item, parent, false);
+            convertView = LayoutInflater.from(this.getContext()).inflate(R.layout.journal_picker_list_item, parent, false);
         }
 
-        disciplineText = (CheckedTextView) convertView.findViewById(R.id.subject_text);
-        disciplineText.setText(getItem(position).getSubject().getTitle());
-        disciplineText.setChecked(getItem(position).getState());
+        journalText = (CheckedTextView) convertView.findViewById(R.id.journal_text);
+        journalText.setText(getItem(position).getJournal().getTitle());
+        journalText.setChecked(getItem(position).getState());
 
         convertView.setTag(getItem(position));
 
@@ -37,7 +38,7 @@ public class SubjectListAdapter extends ArrayAdapter<SubjectListItem> {
     }
 
     @Override
-    public SubjectListItem getItem(int position) {
+    public JournalListItem getItem(int position) {
         return super.getItem(position);
     }
 }

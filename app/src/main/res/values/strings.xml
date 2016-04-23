@@ -30,4 +30,9 @@
     <string name="subjects">Subjects</string>
     <string name="next">Next</string>
     <string name="please_select_subjects">Please select at least one subject:</string>
+    <string name="title_activity_register">Register</string>
+    <string name="action_register">Register</string>
+    <string name="action_sign_in_short_confirm">Password (confirm)</string>
+    <string name="not_user_register_here">Not a user yet? Register here.</string>
+    <string name="please_select_journals">Please select at least one journal:</string>
 </resources>

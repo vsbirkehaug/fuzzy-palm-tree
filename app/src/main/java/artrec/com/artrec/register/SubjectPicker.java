@@ -1,15 +1,13 @@
 package artrec.com.artrec.register;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CheckedTextView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.*;
 import artrec.com.artrec.R;
+import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.models.SubjectListItem;
 
@@ -18,23 +16,29 @@ import java.util.ArrayList;
 /**
  * Created by Vilde on 23.04.2016.
  */
-public class SubjectPicker extends DialogFragment{
+public class SubjectPicker extends AppCompatActivity {
     private ListView listView;
-    ArrayList<String> selectedSubjects;
-    RelativeLayout bottomMenu;
+    private ArrayList<Subject> selectedSubjects;
+    private RelativeLayout bottomMenu;
     private static ArrayList<Subject> results;
+    private static SubjectPicker INSTANCE;
+    private Button nextButton;
 
     public static void setResults(ArrayList<Subject> results) {
         SubjectPicker.results = results;
+        INSTANCE.handleResults(results);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.subject_picker_fragment);
 
-        View view = inflater.inflate(R.layout.subject_picker_fragment, container, false);
-        listView = (ListView) view.findViewById(R.id.discipline_list);
-        bottomMenu = (RelativeLayout) view.findViewById(R.id.discipline_bottom_menu);
-        return view;
+        INSTANCE = this;
+
+        listView = (ListView) findViewById(R.id.subject_list);
+        bottomMenu = (RelativeLayout) findViewById(R.id.subject_bottom_menu);
+        nextButton = (Button) findViewById(R.id.subject_next_button);
     }
 
     @Override
@@ -42,23 +46,49 @@ public class SubjectPicker extends DialogFragment{
         super.onStart();
         selectedSubjects = new ArrayList<>();
         try {
-            getActivity().getActionBar().setTitle(R.string.please_select_subjects);
-            getActivity().getActionBar().setSubtitle(String.valueOf(selectedSubjects.size()));
+            getSupportActionBar().setTitle(R.string.please_select_subjects);
+            getSupportActionBar().setSubtitle(String.valueOf(selectedSubjects.size()));
         } catch (NullPointerException npex) {
             npex.printStackTrace();
         }
 
-        String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllSubjects";
-        new GetSubjectsAsyncTask(getActivity()).execute(url);
+        final SubjectPicker subjectPicker = this;
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(subjectPicker, JournalPicker.class);
+                intent.putExtra("ids", getIdsFromSubjects());
+                startActivity(intent);
+            }
+        });
+
+        if(results == null) {
+            String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllSubjects";
+            new GetSubjectsAsyncTask(this).execute(url);
+        } else {
+            handleResults(results);
+        }
     }
 
-    public void handleResults(ArrayList<String> disciplines) {
+    private int[] getIdsFromSubjects() {
+        Log.i("vilde", ""+selectedSubjects.size());
+        int[] ids = new int[selectedSubjects.size()];
+
+        for(int i = 0; i < selectedSubjects.size(); i++) {
+            ids[i] = selectedSubjects.get(i).getId();
+            Log.i("vilde", "selected id "+selectedSubjects.get(i).getId());
+        }
+        return ids;
+    }
+
+    public void handleResults(ArrayList<Subject> subjects) {
         ArrayList<SubjectListItem> items = new ArrayList<>();
-        for(String s : disciplines) {
+
+        for(Subject s : subjects) {
             items.add(new SubjectListItem(s, false));
         }
 
-        SubjectListAdapter adapter = new SubjectListAdapter(this.getActivity(), 0, items);
+        SubjectListAdapter adapter = new SubjectListAdapter(this, 0, items);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,7 +96,7 @@ public class SubjectPicker extends DialogFragment{
                 try {
                     SubjectListItem item = (SubjectListItem) view.getTag();
                     item.setState(!item.getState());
-                    CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.discipline_text);
+                    CheckedTextView ctv = (CheckedTextView) view.findViewById(R.id.subject_text);
                     ctv.setChecked(item.getState());
                     if (item.getState()) {
                         selectedSubjects.add(item.getSubject());
@@ -83,11 +113,11 @@ public class SubjectPicker extends DialogFragment{
 
                 try {
                     if(selectedSubjects.size() > 0) {
-                        getActivity().getActionBar().setTitle(R.string.subjects);
+                        getSupportActionBar().setTitle(R.string.subjects);
                     } else {
-                        getActivity().getActionBar().setTitle(R.string.please_select_subjects);
+                        getSupportActionBar().setTitle(R.string.please_select_subjects);
                     }
-                    getActivity().getActionBar().setSubtitle(String.valueOf(selectedSubjects.size()));
+                    getSupportActionBar().setSubtitle(String.valueOf(selectedSubjects.size()));
                 } catch (NullPointerException npex) {
                     npex.printStackTrace();
                 }

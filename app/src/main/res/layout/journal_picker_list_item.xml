@@ -6,7 +6,7 @@
         android:layout_height="match_parent">
 
     <CheckedTextView
-            android:id="@+id/subject_text"
+            android:id="@+id/journal_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"

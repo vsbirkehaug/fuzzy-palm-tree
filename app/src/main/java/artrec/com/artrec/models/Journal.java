@@ -5,6 +5,15 @@ package artrec.com.artrec.models;
  */
 public class Journal {
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private String issn;
     private String title;
     private String url;
@@ -17,6 +26,11 @@ public class Journal {
         this.url = url;
         this.publisher = publisher;
         this.rights = rights;
+    }
+
+    public Journal(int idJournal, String title) {
+        this.id = idJournal;
+        this.title = title;
     }
 
     public String getIssn() {
