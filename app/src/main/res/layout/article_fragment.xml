@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/articleListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:weightSum="5"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:background="@drawable/bottom_underline"
+    >
+
+        <TextView
+                android:id="@+id/articleTitleHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:textSize="16sp"
+                android:text="@string/title"
+        />
+
+        <TextView
+                android:id="@+id/publicationDateHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:text="@string/publication_date"
+        />
+
+
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/articleListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    </ListView>
+
+</LinearLayout>

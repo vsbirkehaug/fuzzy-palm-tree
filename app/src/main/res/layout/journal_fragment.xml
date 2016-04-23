@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/journalListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:weightSum="6"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="10dp"
+            android:background="@drawable/bottom_underline"
+    >
+
+        <TextView
+                android:id="@+id/journalTitleHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:textSize="16sp"
+                android:text="@string/title"
+        />
+
+        <TextView
+                android:id="@+id/journalPublisherHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:textSize="16sp"
+                android:text="@string/publisher"
+        />
+
+        <TextView
+                android:id="@+id/journalRightsHeader"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:text="@string/rights"
+        />
+
+    </LinearLayout>
+
+    <ListView
+            android:id="@+id/journalListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    </ListView>
+
+</LinearLayout>
