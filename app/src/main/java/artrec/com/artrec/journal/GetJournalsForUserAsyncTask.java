@@ -51,13 +51,23 @@ public class GetJournalsForUserAsyncTask extends APICall {
 
             for (int i = 0; i < resultJsonArray.length(); i++) {
                 try {
-                    if(resultJsonArray.getJSONObject(i).has("issn"))
+                    if(resultJsonArray.getJSONObject(i).has("issn")) {
                         journals.add(new Journal(
+                                resultJsonArray.getJSONObject(i).getInt("id"),
                                 resultJsonArray.getJSONObject(i).getString("issn"),
                                 resultJsonArray.getJSONObject(i).getString("title"),
                                 resultJsonArray.getJSONObject(i).getString("url"),
                                 resultJsonArray.getJSONObject(i).getString("publisher"),
                                 resultJsonArray.getJSONObject(i).getString("rights")));
+                    }
+//                    else {
+//                        journals.add(new Journal(
+//                                resultJsonArray.getJSONObject(i).getInt("id"),
+//                                resultJsonArray.getJSONObject(i).getString("title"),
+//                                resultJsonArray.getJSONObject(i).getString("url"),
+//                                resultJsonArray.getJSONObject(i).getString("publisher"),
+//                                resultJsonArray.getJSONObject(i).getString("rights")));
+//                    }
                 }catch (JSONException ex) {
                     ex.printStackTrace();
                 }
