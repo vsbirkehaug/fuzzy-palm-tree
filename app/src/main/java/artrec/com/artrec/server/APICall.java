@@ -87,19 +87,23 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
 //            localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost post = new HttpPost("http://192.168.0.13:8080/ArtRec/api/v1/user");
-
+            HttpGet get = new HttpGet("http://192.168.0.13:8080/ArtRec/api/v1/user");
             ArrayList<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("username", java.net.URLEncoder.encode(username, "UTF-8")));
             params.add(new BasicNameValuePair("password",  java.net.URLEncoder.encode(passwordHash, "UTF-8")));
             //post.addHeader("username", username);
             //post.addHeader("password", passwordHash);
-            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            get.addHeader("username", java.net.URLEncoder.encode(username, "UTF-8"));
+            get.addHeader("password", java.net.URLEncoder.encode(passwordHash, "UTF-8"));
+            get.setHeader("Content-Type", "application/x-www-form-urlencoded");
+           //post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            //post.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
             Log.i("vilde", username);
             Log.i("vilde", passwordHash);
 
-            HttpResponse httpResponse = httpclient.execute(post);
+            //HttpResponse httpResponse = httpclient.execute(post);
+            HttpResponse httpResponse = httpclient.execute(get);
 
             inputStream = httpResponse.getEntity().getContent();
 
