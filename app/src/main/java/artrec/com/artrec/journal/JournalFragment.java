@@ -3,24 +3,24 @@ package artrec.com.artrec.journal;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
-import artrec.com.artrec.main.FragmentEnum;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Journal;
-import com.pkmmte.pkrss.PkRSS;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Vilde on 23.04.2016.
@@ -28,7 +28,9 @@ import java.util.ArrayList;
 public class JournalFragment extends Fragment{
 
     private final static String url = MainActivity.APIURL + "getJournals";
-    private ListView journalList;
+    private ListView journalListView;
+    private EditText searchFilter;
+    private JournalAdapter adapter;
 
     public JournalFragment() {
 
@@ -39,18 +41,42 @@ public class JournalFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.journal_fragment, container, false);
 
-        journalList = (ListView) view.findViewById(R.id.journalListView);
+        journalListView = (ListView) view.findViewById(R.id.journalListView);
+
+
+        searchFilter = (EditText) view.findViewById(R.id.journalSearchFilterEditText);
+        searchFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(adapter != null) {
+                    String text = searchFilter.getText().toString().toLowerCase(Locale.getDefault());
+                    adapter.filter(text);
+                }
+            }
+        });
 
         GetJournalsForUserAsyncTask task = new GetJournalsForUserAsyncTask(getActivity(), this);
         Log.i("vilde", "userid getting journals: " + getActivity().getIntent().getIntExtra("userid", 0));
         task.setUser(getActivity().getIntent().getIntExtra("userid", 0));
         task.execute(url);
+
         return view;
     }
 
-    void setJournalList(ArrayList<Journal> journals) {
-        journalList.setAdapter(new JournalAdapter(this.getContext(), 0, journals));
-        journalList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    void setJournalListView(ArrayList<Journal> journals) {
+        adapter = new JournalAdapter(this.getContext(), 0, journals);
+        journalListView.setAdapter(adapter);
+        journalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ArticleFragment fragment = new ArticleFragment();
@@ -63,4 +89,5 @@ public class JournalFragment extends Fragment{
             }
         });
     }
+
 }

@@ -1,5 +1,6 @@
 package artrec.com.artrec.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import artrec.com.artrec.R;
+import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Project;
@@ -27,6 +29,7 @@ public class ProjectFragment extends Fragment {
     private ArrayList<Project> projects;
     private final static String url = MainActivity.APIURL+"getProjectsForUser";
     private ListView projectList;
+    private final static String articleUrl = MainActivity.APIURL+"getArticlesForProject";
 
     public ProjectFragment() {
         INSTANCE = this;
@@ -45,6 +48,20 @@ public class ProjectFragment extends Fragment {
         final View view = inflater.inflate(R.layout.project_fragment, container, false);
 
         projectList = (ListView) view.findViewById(R.id.projectListView);
+        projectList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    Project project = (Project) view.getTag();
+                    GetArticlesForProjectAsyncTask task = new GetArticlesForProjectAsyncTask(getActivity(), INSTANCE);
+                    task.setProject(project);
+                    task.execute(articleUrl);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
 
         if(projects != null) {
             projectList.setAdapter(new ProjectAdapter(getInstance().getContext(), 0, projects));
@@ -55,7 +72,7 @@ public class ProjectFragment extends Fragment {
         return view;
     }
 
-    public void getProjectsForUser(int userId) {
+    private void getProjectsForUser(int userId) {
         new GetProjectsForUserAsyncTask(getActivity(), this).execute(url, String.valueOf(userId));
     }
 
@@ -70,5 +87,12 @@ public class ProjectFragment extends Fragment {
             text.setTextSize(16f);
             ((LinearLayout)getView()).addView(text);
         }
+    }
+
+    void setArticleList(ArrayList<Article> articleList) {
+        ArticleFragment fragment = new ArticleFragment();
+        fragment.setArticleList(articleList);
+        MainActivity.INSTANCE.goToFragment(fragment);
+
     }
 }

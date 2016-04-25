@@ -57,7 +57,7 @@ public class GetJournalsAsyncTask extends APICall {
                 }catch (JSONException ex) {
                     ex.printStackTrace();
                 }
-                fragment.setJournalList(journals);
+                fragment.setJournalListView(journals);
             }
         } catch (JSONException e) {
             e.printStackTrace();

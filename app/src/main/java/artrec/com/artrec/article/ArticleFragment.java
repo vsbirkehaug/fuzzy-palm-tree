@@ -80,7 +80,7 @@ public class ArticleFragment extends Fragment {
         new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
     }
 
-    void setArticleList(ArrayList<Article> resultArticles) {
+    public void setArticleList(ArrayList<Article> resultArticles) {
         articles = resultArticles;
         if(articles.size() > 0) {
             adapter = new ArticleAdapter(getInstance().getContext(), 0, resultArticles);

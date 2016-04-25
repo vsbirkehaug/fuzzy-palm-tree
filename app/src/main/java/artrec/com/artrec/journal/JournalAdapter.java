@@ -7,17 +7,26 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import artrec.com.artrec.R;
+import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Journal;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Vilde on 23.04.2016.
  */
 public class JournalAdapter extends ArrayAdapter<Journal> {
 
+    private ArrayList<Journal> journalArrayList;
+    private List<Journal> journalList;
+
     public JournalAdapter(Context context, int textViewResourceId, ArrayList<Journal> objects) {
         super(context, textViewResourceId, objects);
+        this.journalList = objects;
+        journalArrayList = new ArrayList<>();
+        journalArrayList.addAll(journalList);
     }
 
     private class ViewHolder {
@@ -51,4 +60,22 @@ public class JournalAdapter extends ArrayAdapter<Journal> {
         return super.getItem(position);
     }
 
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        journalList.clear();
+        if (charText.length() == 0) {
+            journalList.addAll(journalArrayList);
+        }
+        else
+        {
+            for (Journal jr : journalArrayList)
+            {
+                if (jr.getTitle().toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    journalList.add(jr);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 }

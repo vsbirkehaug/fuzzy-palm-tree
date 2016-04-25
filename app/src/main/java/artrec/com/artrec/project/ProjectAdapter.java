@@ -39,7 +39,7 @@ public class ProjectAdapter extends ArrayAdapter<Project> {
         viewHolder.projectTitle.setText(getItem(position).getTitle());
         viewHolder.projectKeywords.setText(getItem(position).getKeywordsString());
 
-        convertView.setTag(viewHolder);
+        convertView.setTag(getItem(position));
 
         return convertView;
     }
