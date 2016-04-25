@@ -3,17 +3,18 @@ package artrec.com.artrec.article;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import artrec.com.artrec.R;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static android.view.View.GONE;
 
@@ -23,9 +24,11 @@ import static android.view.View.GONE;
 public class ArticleFragment extends Fragment {
 
     public static ArticleFragment INSTANCE;
-    private static ArrayList<Article> articles;
+    private ArrayList<Article> articles;
     private final static String url = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
     private ListView articleList;
+    private EditText searchFilter;
+    private ArticleAdapter adapter;
 
     public ArticleFragment() {
         INSTANCE = this;
@@ -49,6 +52,27 @@ public class ArticleFragment extends Fragment {
             articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, articles));
         }
 
+        searchFilter = (EditText) view.findViewById(R.id.articleSearchFilterEditText);
+        searchFilter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String text = searchFilter.getText().toString().toLowerCase(Locale.getDefault());
+                if(adapter != null) {
+                    adapter.filter(text);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -59,7 +83,8 @@ public class ArticleFragment extends Fragment {
     void setArticleList(ArrayList<Article> resultArticles) {
         articles = resultArticles;
         if(articles.size() > 0) {
-            articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, resultArticles));
+            adapter = new ArticleAdapter(getInstance().getContext(), 0, resultArticles);
+            articleList.setAdapter(adapter);
         } else {
             articleList.setVisibility(GONE);
             TextView text = new TextView(getContext());
