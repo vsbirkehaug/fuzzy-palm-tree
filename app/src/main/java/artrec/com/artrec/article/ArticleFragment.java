@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import artrec.com.artrec.R;
+import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 
 import java.util.ArrayList;
@@ -23,7 +24,7 @@ public class ArticleFragment extends Fragment {
 
     public static ArticleFragment INSTANCE;
     private static ArrayList<Article> articles;
-    private final static String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllArticlesForJournal?issn=";
+    private final static String url = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
     private ListView articleList;
 
     public ArticleFragment() {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <TextView
+                android:id="@+id/main_welcome_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_to_artrec"
+                android:gravity="center_horizontal"
+                android:textSize="28sp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+        />
+
+        <TextView
+                android:id="@+id/main_welcome_message_long"
+                android:layout_below="@+id/main_welcome_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_welcome_message_long"
+                android:paddingTop="10dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
+                android:paddingBottom="15dp"
+                android:textSize="16sp"
+        />
+
+        <TextView
+                android:layout_below="@+id/main_welcome_message_long"
+                android:id="@+id/main_welcome_message_tip_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
+                android:paddingBottom="5dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:text="@string/tip_colon"
+        />
+
+        <TextView
+                android:layout_below="@+id/main_welcome_message_tip_header"
+                android:id="@+id/main_welcome_message_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/main_welcome_message_tip"
+                android:paddingTop="10dp"
+                android:paddingStart="25dp"
+                android:paddingEnd="25dp"
+                android:textSize="16sp"
+        />
+
+
+    </RelativeLayout>
+
+</LinearLayout>

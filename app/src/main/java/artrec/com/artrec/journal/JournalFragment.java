@@ -27,7 +27,7 @@ import java.util.ArrayList;
  */
 public class JournalFragment extends Fragment{
 
-    private final static String url = "http://192.168.0.13:8080/ArtRec/api/v1/getJournals";
+    private final static String url = MainActivity.APIURL + "getJournals";
     private ListView journalList;
 
     public JournalFragment() {

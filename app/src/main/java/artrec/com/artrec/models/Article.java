@@ -6,6 +6,25 @@ import java.util.Date;
  * Created by Vilde on 23.04.2016.
  */
 public class Article {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String description;
     private String title;
     private String link;
     private String identifier;
@@ -30,6 +49,14 @@ public class Article {
     }
 
     public Article(String title, String link, String publicationDate) {
+        this.title = title;
+        this.link = link;
+        this.publicationDate = publicationDate;
+    }
+
+    public Article(int id, String description, String title, String link, String publicationDate) {
+        this.id = id;
+        this.description = description;
         this.title = title;
         this.link = link;
         this.publicationDate = publicationDate;

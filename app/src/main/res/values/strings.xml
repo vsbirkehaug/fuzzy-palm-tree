@@ -35,4 +35,10 @@
     <string name="action_sign_in_short_confirm">Password (confirm)</string>
     <string name="not_user_register_here">Not a user yet? Register here.</string>
     <string name="please_select_journals">Please select at least one journal:</string>
+    <string name="welcome_to_artrec">Welcome to ArtRec!</string>
+    <string name="main_welcome_message_long">To get started, have a look in the swipe in menu to the left.</string>
+    <string name="main_welcome_message_tip">By clicking on journals in the menu, you can view a list of your selected
+        journals. By clicking on a journal you\'ll see the latest articles published in that journal!
+    </string>
+    <string name="tip_colon">Tip:</string>
 </resources>

@@ -204,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             showProgress(true);
             mAuthTask = new RegisterUserAsyncCall(this);
             mAuthTask.setCredentials(username, password);
-            mAuthTask.execute("192.168.0.13:8080/ArtRec/api/v1/user");
+            mAuthTask.execute(MainActivity.APIURL+"user");
         }
     }
 

@@ -48,6 +48,7 @@ public class GetJournalsAsyncTask extends APICall {
                 try {
                     if(resultJsonArray.getJSONObject(i).has("issn"))
                         journals.add(new Journal(
+                                resultJsonArray.getJSONObject(i).getInt("id"),
                                 resultJsonArray.getJSONObject(i).getString("issn"),
                                 resultJsonArray.getJSONObject(i).getString("title"),
                                 resultJsonArray.getJSONObject(i).getString("url"),

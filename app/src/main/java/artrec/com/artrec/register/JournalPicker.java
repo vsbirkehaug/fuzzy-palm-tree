@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.*;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.GetArticlesForJournalAsyncTask;
+import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.JournalListItem;
 import artrec.com.artrec.models.Subject;
@@ -103,7 +104,7 @@ public class JournalPicker extends AppCompatActivity {
         });
 
         if(results == null) {
-            String url = "http://192.168.0.13:8080/ArtRec/api/v1/getJournalsForSubjects";
+            String url = MainActivity.APIURL+"getJournalsForSubjects";
             GetJournalsForSubjectsAsyncTask call = new GetJournalsForSubjectsAsyncTask(this);
             call.setParameters(subjectIds);
             call.execute(url);
@@ -115,11 +116,11 @@ public class JournalPicker extends AppCompatActivity {
     private void saveSubjectsAndJournals() {
         PostUserSubjectsAsyncTask uSubjects = new PostUserSubjectsAsyncTask(this);
         uSubjects.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), subjectIds);
-        uSubjects.execute("http://192.168.0.13:8080/ArtRec/api/v1/userSubject");
+        uSubjects.execute(MainActivity.APIURL+"userSubject");
 
         PostUserJournalsAsyncTask uJournals = new PostUserJournalsAsyncTask(this);
         uJournals.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), getIdsFromJournals());
-        uJournals.execute("http://192.168.0.13:8080/ArtRec/api/v1/userJournal");
+        uJournals.execute(MainActivity.APIURL+"userJournal");
     }
 
     @Override

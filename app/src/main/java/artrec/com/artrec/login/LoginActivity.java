@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new AuthenticateUserAsyncCall(this);
             mAuthTask.setCredentials(username, password);
-            mAuthTask.execute("192.168.0.13:8080/ArtRec/api/v1/user");
+            mAuthTask.execute(MainActivity.APIURL+"user");
         }
     }
 
