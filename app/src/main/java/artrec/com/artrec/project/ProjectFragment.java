@@ -24,8 +24,8 @@ import static android.view.View.GONE;
 public class ProjectFragment extends Fragment {
 
     public static ProjectFragment INSTANCE;
-    private static ArrayList<Project> projects;
-    private final static String url = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
+    private ArrayList<Project> projects;
+    private final static String url = MainActivity.APIURL+"getProjectsForUser";
     private ListView projectList;
 
     public ProjectFragment() {
@@ -48,13 +48,15 @@ public class ProjectFragment extends Fragment {
 
         if(projects != null) {
             projectList.setAdapter(new ProjectAdapter(getInstance().getContext(), 0, projects));
+        } else {
+            getProjectsForUser(getActivity().getIntent().getIntExtra("userid", -1));
         }
 
         return view;
     }
 
     public void getProjectsForUser(int userId) {
-        new GetProjectsForUserAsyncTask(getActivity(), this).execute(url+userId);
+        new GetProjectsForUserAsyncTask(getActivity(), this).execute(url, String.valueOf(userId));
     }
 
     void setProjectList(ArrayList<Project> resultArticles) {
@@ -64,7 +66,7 @@ public class ProjectFragment extends Fragment {
         } else {
             projectList.setVisibility(GONE);
             TextView text = new TextView(getContext());
-            text.setText("No projects found for this journal.");
+            text.setText("No projects found for this user.");
             text.setTextSize(16f);
             ((LinearLayout)getView()).addView(text);
         }

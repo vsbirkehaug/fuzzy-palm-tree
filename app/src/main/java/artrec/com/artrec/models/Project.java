@@ -15,10 +15,10 @@ public class Project {
             StringBuilder nameBuilder = new StringBuilder();
 
             for (Keyword kw : keywords) {
-                nameBuilder.append(kw.getName()).append("',");
+                nameBuilder.append(kw.getName()).append(", ");
             }
 
-            nameBuilder.deleteCharAt(nameBuilder.length() - 1);
+            nameBuilder.deleteCharAt(nameBuilder.length() - 2);
 
             return nameBuilder.toString();
         } else {

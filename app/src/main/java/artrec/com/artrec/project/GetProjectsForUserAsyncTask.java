@@ -17,22 +17,17 @@ import java.util.ArrayList;
  * Created by Vilde on 23.04.2016.
  */
 public class GetProjectsForUserAsyncTask extends APICall {
-    ProjectFragment fragment;
-    private int userId;
+    private ProjectFragment fragment;
 
     public GetProjectsForUserAsyncTask(Activity parent, ProjectFragment fragment) {
         super(parent);
         this.fragment = fragment;
     }
 
-    public void setUser(int userId) {
-        this.userId = userId;
-    }
-
     @Override
     protected String doInBackground(String... urls) {
 
-        String thisResult = GETFORUSER(urls[0], userId);
+        String thisResult = GETFORUSER(urls[0], Integer.parseInt(urls[1]));
 
         Log.i("vilde", "Result: " + thisResult);
 
@@ -50,29 +45,44 @@ public class GetProjectsForUserAsyncTask extends APICall {
 
             ArrayList<Project> projects = new ArrayList<>();
             ArrayList<Keyword> keywords;
-            Keyword keyword;
+
+            keywords = new ArrayList<>();
 
             for (int i = 0; i < resultJsonArray.length(); i++) {
 
-                keywords = new ArrayList<>();
-
-                JSONArray kws = resultJsonArray.getJSONObject(i).getJSONArray("keywords");
-                for(int j = 0; j < kws.length(); j++) {
-                    keyword = new Keyword(kws.getJSONObject(j).getInt("idKeyword"), kws.getJSONObject(j).getString("keyword"));
-                    keywords.add(keyword);
+                if(projectWithId(resultJsonArray.getJSONObject(i).getInt("idProject"), projects) == null) {
+                    keywords = new ArrayList<>();
+                    projects.add(new Project(
+                            (resultJsonArray.getJSONObject(i).getInt("idProject")),
+                            (resultJsonArray.getJSONObject(i).getString("title")),
+                            (resultJsonArray.getJSONObject(i).getInt("idUser")),
+                            keywords
+                    ));
+                } else {
+                    projectWithId(resultJsonArray.getJSONObject(i).getInt("idProject"), projects).getKeywords().add(new Keyword(resultJsonArray.getJSONObject(i).getInt("idKeyword"), resultJsonArray.getJSONObject(i).getString("keyword")));
                 }
-                projects.add(new Project(
-                        (resultJsonArray.getJSONObject(i).getInt("idProject")),
-                        (resultJsonArray.getJSONObject(i).getString("title")),
-                        (resultJsonArray.getJSONObject(i).getInt("idUser")),
-                        keywords
-                        ));
             }
 
             fragment.setProjectList(projects);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    private Project projectWithId(int id, ArrayList<Project> projects) {
+        for(Project p : projects) {
+            if(p.getId() == id)
+                return p;
+        }
+        return null;
+    }
+
+    private boolean listHasProjectWithId(int id, ArrayList<Project> projects) {
+        for(Project p : projects) {
+            if(p.getId() == id)
+                return true;
+        }
+        return false;
     }
 
     private String replaceChars(String string) {

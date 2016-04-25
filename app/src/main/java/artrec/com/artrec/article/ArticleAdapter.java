@@ -11,14 +11,20 @@ import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Journal;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Vilde on 23.04.2016.
  */
 public class ArticleAdapter extends ArrayAdapter<Article> {
 
+    private ArrayList<Article> articles;
+    private List<Article> articleList;
+
     public ArticleAdapter(Context context, int textViewResourceId, ArrayList<Article> objects) {
         super(context, textViewResourceId, objects);
+        articleList = objects;
     }
 
     private class ViewHolder {
@@ -50,6 +56,25 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
     @Override
     public Article getItem(int position) {
         return super.getItem(position);
+    }
+
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        articles.clear();
+        if (charText.length() == 0) {
+            articles.addAll(articleList);
+        }
+        else
+        {
+            for (Article ar : articleList)
+            {
+                if (ar.getTitle().toLowerCase(Locale.getDefault()).contains(charText))
+                {
+                    articles.add(ar);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
 }

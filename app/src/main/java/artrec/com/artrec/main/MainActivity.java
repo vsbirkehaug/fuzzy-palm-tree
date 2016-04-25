@@ -21,7 +21,7 @@ import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.journal.JournalFragment;
 import artrec.com.artrec.login.LoginActivity;
-import artrec.com.artrec.models.Article;
+import artrec.com.artrec.project.ProjectFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private static boolean subjectSaveDone = false;
     public static final String APIURL = "http://192.168.0.13:8080/ArtRec/api/v1/";
     FrameLayout contentFrame;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity
         contentFrame = (FrameLayout) findViewById(R.id.mainContent);
         contentFrame.addView(getLayoutInflater().inflate(R.layout.main_fragment, null));
         getSupportActionBar().setTitle(getString(R.string.welcome));
+        this.fab = (FloatingActionButton) findViewById(R.id.fab);
 
     }
 
@@ -148,8 +150,17 @@ public class MainActivity extends AppCompatActivity
                     getSupportActionBar().setTitle(getString(R.string.settings));
                     break;
                 case R.id.nav_projects:
-                    fragmentClass = JournalFragment.class;
+                    fragmentClass = ProjectFragment.class;
                     getSupportActionBar().setTitle(getString(R.string.projects));
+                    fragment = (Fragment) fragmentClass.newInstance();
+                    fab.setBackground(getDrawable(R.drawable.ic_add_white_48dp));
+                    fab.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                        }
+                    });
+
                     break;
                 default:
                     fragmentClass = JournalFragment.class;

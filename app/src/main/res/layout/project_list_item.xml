@@ -3,8 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingBottom="3dp"
-              android:paddingTop="3dp"
+              android:paddingBottom="8dp"
+              android:paddingTop="8dp"
               android:paddingStart="10dp"
               android:paddingEnd="10dp"
     >
@@ -13,17 +13,17 @@
             android:id="@+id/projectTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:gravity="center_vertical"
-            android:textStyle="bold"
             android:textColor="@android:color/primary_text_light"
+            android:paddingBottom="2dp"
     />
 
     <TextView
             android:id="@+id/projectKeywords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:gravity="center_vertical"
             android:textColor="@android:color/darker_gray"
     />
