@@ -42,4 +42,7 @@
     </string>
     <string name="tip_colon">Tip:</string>
     <string name="welcome">Welcome</string>
+    <string name="error_password_mismatch">Password don\'t match.</string>
+    <string name="error_username_exists">Username already taken.</string>
+    <string name="username_available">Username available.</string>
 </resources>

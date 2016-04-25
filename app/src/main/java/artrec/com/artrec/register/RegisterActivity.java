@@ -5,35 +5,22 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import artrec.com.artrec.R;
 import artrec.com.artrec.main.MainActivity;
@@ -41,13 +28,12 @@ import artrec.com.artrec.models.User;
 import artrec.com.artrec.server.APICall;
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import static android.Manifest.permission.READ_CONTACTS;
+import org.json.JSONObject;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -69,8 +55,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
+    private EditText mPasswordViewConfirm;
     private View mProgressView;
     private View mLoginFormView;
+    private boolean usernameAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,74 +67,86 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         setupActionBar();
         // Set up the login form.
         mUsernameView = (AutoCompleteTextView) findViewById(R.id.username);
-        populateAutoComplete();
 
+        mUsernameView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    checkUsernameExists(); //async
+                }
+            }
+        });
         mPasswordView = (EditText) findViewById(R.id.password);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mPasswordViewConfirm = (EditText) findViewById(R.id.passwordConfirm);
+
+        mPasswordViewConfirm.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+
+                if(passwordsMatch()) {
+                    if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                } else {
+                    mPasswordViewConfirm.setError(getString(R.string.error_password_mismatch));
+                    mPasswordViewConfirm.requestFocus();
                 }
                 return false;
             }
         });
 
-        Button mUsernameSignInButton = (Button) findViewById(R.id.username_sign_in_button);
-        mUsernameSignInButton.setOnClickListener(new OnClickListener() {
+
+        final Button mSignInButton = (Button) findViewById(R.id.sign_in_button);
+        mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                if(usernameAvailable) {
+                    attemptLogin();
+                } else {
+                    mUsernameView.setError(getString(R.string.error_username_exists));
+                }
+            }
+        });
+
+        mPasswordViewConfirm.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(isPasswordValid(mPasswordViewConfirm.getText().toString())) {
+                    mSignInButton.setEnabled(true);
+                } else {
+                    mSignInButton.setEnabled(false);
+                    mPasswordViewConfirm.setError(getString(R.string.error_password_mismatch));
+                }
             }
         });
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        mSignInButton.setEnabled(false);
+
     }
 
-    private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
-        }
-
-        getLoaderManager().initLoader(0, null, this);
+    private void checkUsernameExists() {
+        CheckUsernameExistsAsyncTask task = new CheckUsernameExistsAsyncTask(this);
+        task.setCredentials(mUsernameView.getText().toString());
+        task.execute(MainActivity.APIURL + "userexists");
     }
 
-    private boolean mayRequestContacts() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true;
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(mUsernameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok, new View.OnClickListener() {
-                        @Override
-                        @TargetApi(Build.VERSION_CODES.M)
-                        public void onClick(View v) {
-                            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-                        }
-                    });
-        } else {
-            requestPermissions(new String[]{READ_CONTACTS}, REQUEST_READ_CONTACTS);
-        }
-        return false;
+    public boolean passwordsMatch() {
+        return TextUtils.equals(mPasswordView.getText(), mPasswordViewConfirm.getText());
     }
 
-    /**
-     * Callback received when a permissions request has been completed.
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                populateAutoComplete();
-            }
-        }
-    }
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.
@@ -210,7 +210,11 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 4 && passwordsMatch() && passwordsSameLength();
+    }
+
+    private boolean passwordsSameLength() {
+        return mPasswordViewConfirm.getText().toString().length() == mPasswordView.getText().toString().length();
     }
 
     /**
@@ -249,60 +253,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
-                // Retrieve data rows for the device user's 'profile' contact.
-                Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
-                        ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
-
-                // Select only email addresses.
-                ContactsContract.Contacts.Data.MIMETYPE +
-                        " = ?", new String[]{ContactsContract.CommonDataKinds.Email
-                .CONTENT_ITEM_TYPE},
-
-                // Show primary email addresses first. Note that there won't be
-                // a primary email address if the user hasn't specified one.
-                ContactsContract.Contacts.Data.IS_PRIMARY + " DESC");
+    public void setUsernameAvailable(boolean usernameAvailable) {
+        this.usernameAvailable = usernameAvailable;
     }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> cursorLoader, Cursor cursor) {
-        List<String> emails = new ArrayList<>();
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            emails.add(cursor.getString(ProfileQuery.ADDRESS));
-            cursor.moveToNext();
-        }
-
-        addEmailsToAutoComplete(emails);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> cursorLoader) {
-
-    }
-
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(RegisterActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mUsernameView.setAdapter(adapter);
-    }
-
-
-    private interface ProfileQuery {
-        String[] PROJECTION = {
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY,
-        };
-
-        int ADDRESS = 0;
-        int IS_PRIMARY = 1;
-    }
-
 
     /**
      * Aan asynchronous login/registration task used to authenticate
@@ -388,6 +341,72 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             mPasswordView.requestFocus();
         }
     }
+
+
+
+    private class CheckUsernameExistsAsyncTask extends APICall {
+        private String authUsername;
+
+        public CheckUsernameExistsAsyncTask(Activity parent) {
+            super(parent);
+        }
+
+        public void setCredentials(String username) {
+            this.authUsername = username;
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            String result = String.valueOf(GETEXISTS(urls[0], this.authUsername));
+
+            Log.i("vilde", "Result: " + result);
+
+            return result;
+        }
+
+
+        // onPostExecute displays the results of the AsyncTask.
+        @SuppressWarnings("static-access")
+        @Override
+        protected void onPostExecute(String result) {
+
+            boolean exists = true;
+            JSONObject resultobject;
+
+            try {
+                resultobject = new JSONObject(result);
+
+                if (result != null) {
+                    try {
+                        if (resultobject.has("exists")) {
+                            exists = resultobject.getBoolean("exists");
+                        } else {
+                            exists = true;
+                        }
+                    } catch (JSONException ex) {
+                        ex.printStackTrace();
+                    }
+
+                }
+
+                setUsernameAvailable(!exists);
+                if (exists) {
+                    mUsernameView.setError(getString(R.string.error_username_exists));
+                    mUsernameView.setTextColor(getColor(android.R.color.holo_red_dark));
+                } else {
+                    mUsernameView.setTextColor(getColor(R.color.colorPrimaryDark));
+
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
 
 }
 

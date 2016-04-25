@@ -103,6 +103,35 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
         return result;
     }
 
+    protected String GETEXISTS(String url, String username) {
+        InputStream inputStream;
+        String result = "";
+        try {
+
+            HttpClient httpclient = new DefaultHttpClient();
+
+            HttpGet get = new HttpGet(url);
+
+            get.addHeader("username", username);
+            get.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            HttpResponse httpResponse = httpclient.execute(get);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+                Log.i("vilde", "The json result is: " + result);
+            } else {
+                //TODO error handling
+            }
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+        return result;
+    }
+
 
     private String intArrayToString(int[] array) {
         String stringIds = "";

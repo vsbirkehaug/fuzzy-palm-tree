@@ -57,7 +57,6 @@ public class JournalFragment extends Fragment{
                 fragment.getArticlesForJournal(((Journal)view.getTag()).getIssn());
                 try {
                     MainActivity.INSTANCE.goToFragment(fragment);
-                    MainActivity.INSTANCE.setMenuItemEnabled(FragmentEnum.ARTICLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

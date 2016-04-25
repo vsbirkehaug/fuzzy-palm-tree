@@ -125,8 +125,8 @@ public class JournalPicker extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         results = null;
+        super.onBackPressed();
     }
 
     private int[] getIdsFromJournals() {
