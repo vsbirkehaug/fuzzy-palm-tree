@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.models.Article;
-import artrec.com.artrec.models.Journal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +18,14 @@ import java.util.Locale;
  */
 public class ArticleAdapter extends ArrayAdapter<Article> {
 
-    private ArrayList<Article> articles;
+    private ArrayList<Article> articleArrayList;
     private List<Article> articleList;
 
     public ArticleAdapter(Context context, int textViewResourceId, ArrayList<Article> objects) {
         super(context, textViewResourceId, objects);
-        articleList = objects;
+        this.articleList = objects;
+        articleArrayList = new ArrayList<>();
+        articleArrayList.addAll(articleList);
     }
 
     private class ViewHolder {
@@ -60,17 +61,17 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 
     public void filter(String charText) {
         charText = charText.toLowerCase(Locale.getDefault());
-        articles.clear();
+        articleList.clear();
         if (charText.length() == 0) {
-            articles.addAll(articleList);
+            articleList.addAll(articleArrayList);
         }
         else
         {
-            for (Article ar : articleList)
+            for (Article ar : articleArrayList)
             {
                 if (ar.getTitle().toLowerCase(Locale.getDefault()).contains(charText))
                 {
-                    articles.add(ar);
+                    articleList.add(ar);
                 }
             }
         }
