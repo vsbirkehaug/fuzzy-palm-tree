@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     private static boolean journalSaveDone = false;
     private static boolean subjectSaveDone = false;
     public static final String APIURL = "http://192.168.0.13:8080/ArtRec/api/v1/";
+    FrameLayout contentFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,11 @@ public class MainActivity extends AppCompatActivity
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        contentFrame = (FrameLayout) findViewById(R.id.mainContent);
+        contentFrame.addView(getLayoutInflater().inflate(R.layout.main_fragment, null));
+        getSupportActionBar().setTitle(getString(R.string.welcome));
+
     }
 
     @Override
@@ -155,24 +162,40 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void setMenuItemEnabled(FragmentEnum frag) {
-        switch(frag) {
+    public void setTitle(Fragment fragment) {
+        //FragmentEnum frag;
+
+      if(fragment.getClass().equals(ArticleFragment.class)) {
+          //frag = FragmentEnum.ARTICLE;
+          getSupportActionBar().setTitle(getString(R.string.articles));
+      } else if (fragment.getClass().equals(JournalFragment.class)) {
+          getSupportActionBar().setTitle(getString(R.string.journals));
+          //frag =  FragmentEnum.JOURNAL;
+      }
+
+/*        switch(frag) {
             case ARTICLE: {
-                optionsMenu.findItem(R.id.nav_articles).setChecked(true);
+                getSupportActionBar().setTitle(getString(R.string.articles));
                 break;
             }
             case JOURNAL: {
-                optionsMenu.findItem(R.id.nav_journals).setChecked(true);
+                getSupportActionBar().setTitle(getString(R.string.journals));
                 break;
             }
-        }
-
+        }*/
     }
 
+
     public void goToFragment(Fragment fragment) {
+
+        setTitle(fragment);
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         for (int i = 0; i < fragmentManager.getBackStackEntryCount(); i++) {
             fragmentManager.popBackStack();
+        }
+        if(contentFrame.getChildCount() > 0) {
+            contentFrame.removeAllViews();
         }
         fragmentManager.beginTransaction().replace(R.id.mainContent, fragment).commit();
     }
