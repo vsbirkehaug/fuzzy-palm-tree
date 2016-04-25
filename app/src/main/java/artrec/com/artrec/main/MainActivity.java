@@ -145,6 +145,11 @@ public class MainActivity extends AppCompatActivity
                     break;
                 case R.id.nav_manage:
                     fragmentClass = JournalFragment.class;
+                    getSupportActionBar().setTitle(getString(R.string.settings));
+                    break;
+                case R.id.nav_projects:
+                    fragmentClass = JournalFragment.class;
+                    getSupportActionBar().setTitle(getString(R.string.projects));
                     break;
                 default:
                     fragmentClass = JournalFragment.class;

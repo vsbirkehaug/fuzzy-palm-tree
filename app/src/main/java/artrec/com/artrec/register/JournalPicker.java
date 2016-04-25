@@ -23,13 +23,13 @@ public class JournalPicker extends AppCompatActivity {
     private ListView listView;
     private ArrayList<Journal> selectedJournals;
     private RelativeLayout bottomMenu;
-    private static ArrayList<Journal> results = null;
+    private ArrayList<Journal> results = null;
     private static JournalPicker INSTANCE;
     private Button nextButton;
     private int[] subjectIds;
 
     public static void setResults(ArrayList<Journal> results) {
-        JournalPicker.results = results;
+        INSTANCE.results = results;
         INSTANCE.handleResults(results);
     }
 
