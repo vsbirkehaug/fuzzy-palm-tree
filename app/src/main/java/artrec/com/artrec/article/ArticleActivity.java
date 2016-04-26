@@ -39,6 +39,8 @@ public class ArticleActivity extends AppCompatActivity {
             fragment.getArticlesForJournal(getIntent().getStringExtra("issn"));
         } else if (getIntent().hasExtra("projectid")) {
             fragment.getArticlesForProject(getIntent().getIntExtra("projectid", -1));
+            if(getIntent().hasExtra("keywords"))
+                fragment.setKeywords(getIntent().getStringArrayListExtra("keywords"));
         }
     }
 

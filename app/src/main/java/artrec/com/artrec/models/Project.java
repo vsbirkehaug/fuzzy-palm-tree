@@ -29,6 +29,14 @@ public class Project {
         return keywords;
     }
 
+    public ArrayList<String> getKeywordsAsStringArrayList() {
+        ArrayList<String> strings = new ArrayList<>();
+        for(Keyword k : keywords) {
+            strings.add(k.getName());
+        }
+        return strings;
+    }
+
     public void setKeywords(ArrayList<Keyword> keywords) {
         this.keywords = keywords;
     }

@@ -1,6 +1,9 @@
 package artrec.com.artrec.journal;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ public class JournalAdapter extends ArrayAdapter<Journal> {
 
     private ArrayList<Journal> journalArrayList;
     private List<Journal> journalList;
+    private String charText = "";
 
     public JournalAdapter(Context context, int textViewResourceId, ArrayList<Journal> objects) {
         super(context, textViewResourceId, objects);
@@ -47,6 +51,28 @@ public class JournalAdapter extends ArrayAdapter<Journal> {
         viewHolder.journalRights = (TextView) convertView.findViewById(R.id.journalRights);
 
         viewHolder.journalTitle.setText(getItem(position).getTitle());
+        try {
+            if (charText.length() > 0) {
+                int ofe = viewHolder.journalTitle.getText().toString().indexOf(charText, 0);
+                Spannable WordtoSpan = new SpannableString(viewHolder.journalTitle.getText());
+                for (int ofs = 0; ofs < getItem(position).getTitle().length() && ofe != -1; ofs = ofe + 1) {
+
+                    ofe = getItem(position).getTitle().indexOf(charText, ofs);
+                    if (ofe == -1)
+                        break;
+                    else {
+                        if (WordtoSpan.length() >= ofe + charText.length()) {
+                            WordtoSpan.setSpan(new BackgroundColorSpan(0xFFFFFF00), ofe, ofe + charText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            viewHolder.journalTitle.setText(WordtoSpan, TextView.BufferType.SPANNABLE);
+                        }
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
         viewHolder.journalPublisher.setText(getItem(position).getPublisher());
         viewHolder.journalRights.setText(getItem(position).getRights());
 
@@ -61,16 +87,16 @@ public class JournalAdapter extends ArrayAdapter<Journal> {
     }
 
     public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
+        this.charText = charText.toLowerCase(Locale.getDefault());
         journalList.clear();
-        if (charText.length() == 0) {
+        if (this.charText.length() == 0) {
             journalList.addAll(journalArrayList);
         }
         else
         {
             for (Journal jr : journalArrayList)
             {
-                if (jr.getTitle().toLowerCase(Locale.getDefault()).contains(charText))
+                if (jr.getTitle().toLowerCase(Locale.getDefault()).contains(this.charText))
                 {
                     journalList.add(jr);
                 }

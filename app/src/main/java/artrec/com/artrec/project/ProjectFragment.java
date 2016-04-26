@@ -53,7 +53,7 @@ public class ProjectFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    activity.goToArticleActivity(((Project)view.getTag()).getId());
+                    activity.goToArticleActivity(((Project)view.getTag()));
                     } catch (Exception ex) {
                     ex.printStackTrace();
                 }

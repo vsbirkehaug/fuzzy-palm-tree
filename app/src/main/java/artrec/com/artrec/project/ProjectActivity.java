@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleActivity;
+import artrec.com.artrec.models.Project;
 
 public class ProjectActivity extends AppCompatActivity {
 
@@ -33,10 +34,11 @@ public class ProjectActivity extends AppCompatActivity {
         fragment.setActivity(this);
     }
 
-    public void goToArticleActivity(int projectId) {
+    public void goToArticleActivity(Project project) {
         try {
             Intent intent = new Intent(this, ArticleActivity.class);
-            intent.putExtra("projectid", projectId);
+            intent.putExtra("projectid", project.getId());
+            intent.putExtra("keywords", project.getKeywordsAsStringArrayList());
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

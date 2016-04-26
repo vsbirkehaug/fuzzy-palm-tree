@@ -1,6 +1,9 @@
 package artrec.com.artrec.project;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.BackgroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

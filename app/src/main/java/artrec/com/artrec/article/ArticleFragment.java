@@ -32,6 +32,7 @@ public class ArticleFragment extends Fragment {
     private EditText searchFilter;
     private ArticleAdapter adapter;
     private ArticleActivity activity;
+    private ArrayList<String> keywords;
 
     public ArticleFragment() {
         INSTANCE = this;
@@ -93,7 +94,12 @@ public class ArticleFragment extends Fragment {
     private void refreshArticles() {
         try {
             if (articles != null && articles.size() > 0) {
-                adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
+                if(keywords != null) {
+                    adapter = new ArticleAdapter(getInstance().getContext(), 0, articles, keywords);
+                } else {
+                    adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
+                }
+
                 articleList.setAdapter(adapter);
             } else if (articles != null){
                 articleList.setVisibility(GONE);
@@ -115,5 +121,10 @@ public class ArticleFragment extends Fragment {
 
     public void setActivity(ArticleActivity activity) {
         this.activity = activity;
+    }
+
+    public void setKeywords(ArrayList<String> keywords) {
+        this.keywords = keywords;
+        refreshArticles();
     }
 }
