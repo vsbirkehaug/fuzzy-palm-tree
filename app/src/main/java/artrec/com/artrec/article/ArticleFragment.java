@@ -48,12 +48,6 @@ public class ArticleFragment extends Fragment {
 
         articleList = (ListView) view.findViewById(R.id.articleListView);
 
-/*
-        if(articles != null) {
-            articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, articles));
-        }
-*/
-
         searchFilter = (EditText) view.findViewById(R.id.articleSearchFilterEditText);
         searchFilter.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,12 +75,25 @@ public class ArticleFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        refreshArticles();
+    }
+
+    public void getArticlesForJournal(String issn) {
+        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
+    }
+
+    public void setArticleList(ArrayList<Article> resultArticles) {
+        articles = resultArticles;
+        refreshArticles();
+    }
+
+    private void refreshArticles() {
         try {
 
             if (articles != null && articles.size() > 0) {
                 adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
                 articleList.setAdapter(adapter);
-            } else {
+            } else if (articles != null){
                 articleList.setVisibility(GONE);
                 TextView text = new TextView(getContext());
                 text.setText("No articles found.");
@@ -96,14 +103,5 @@ public class ArticleFragment extends Fragment {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    public void getArticlesForJournal(String issn) {
-        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
-    }
-
-    public void setArticleList(ArrayList<Article> resultArticles) {
-        articles = resultArticles;
-
     }
 }

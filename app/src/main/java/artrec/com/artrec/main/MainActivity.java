@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
+import artrec.com.artrec.journal.JournalActivity;
 import artrec.com.artrec.journal.JournalFragment;
 import artrec.com.artrec.login.LoginActivity;
 import artrec.com.artrec.project.ProjectFragment;
@@ -141,9 +142,13 @@ public class MainActivity extends AppCompatActivity
                     getSupportActionBar().setTitle(getString(R.string.articles));
                     break;
                 case R.id.nav_journals:
-                    fragmentClass = JournalFragment.class;
+                   /* fragmentClass = JournalFragment.class;
                     fragment = (Fragment) fragmentClass.newInstance();
-                    getSupportActionBar().setTitle(getString(R.string.journals));
+                    getSupportActionBar().setTitle(getString(R.string.journals));*/
+                    Intent intent = new Intent(this, JournalActivity.class);
+                    intent.putExtra("userid", userId);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
                     break;
                 case R.id.nav_manage:
                     fragmentClass = JournalFragment.class;
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        goToFragment(fragment);
+        //goToFragment(fragment);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -181,24 +186,14 @@ public class MainActivity extends AppCompatActivity
     public void setTitle(Fragment fragment) {
         //FragmentEnum frag;
 
-      if(fragment.getClass().equals(ArticleFragment.class)) {
+     /* if(fragment.getClass().equals(ArticleFragment.class)) {
           //frag = FragmentEnum.ARTICLE;
           getSupportActionBar().setTitle(getString(R.string.articles));
       } else if (fragment.getClass().equals(JournalFragment.class)) {
           getSupportActionBar().setTitle(getString(R.string.journals));
           //frag =  FragmentEnum.JOURNAL;
-      }
+      }*/
 
-/*        switch(frag) {
-            case ARTICLE: {
-                getSupportActionBar().setTitle(getString(R.string.articles));
-                break;
-            }
-            case JOURNAL: {
-                getSupportActionBar().setTitle(getString(R.string.journals));
-                break;
-            }
-        }*/
     }
 
 

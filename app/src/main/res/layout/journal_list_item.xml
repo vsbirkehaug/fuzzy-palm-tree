@@ -4,8 +4,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:weightSum="6"
-              android:paddingBottom="3dp"
-              android:paddingTop="3dp"
+              android:paddingBottom="5dp"
+              android:paddingTop="5dp"
               android:paddingStart="10dp"
     >
 
@@ -14,7 +14,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:gravity="center_vertical"
     />
 

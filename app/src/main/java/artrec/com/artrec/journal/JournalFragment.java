@@ -1,5 +1,6 @@
 package artrec.com.artrec.journal;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import artrec.com.artrec.R;
+import artrec.com.artrec.article.ArticleActivity;
 import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
@@ -31,9 +33,9 @@ public class JournalFragment extends Fragment{
     private ListView journalListView;
     private EditText searchFilter;
     private JournalAdapter adapter;
+    private JournalActivity activity;
 
     public JournalFragment() {
-
     }
 
     @Nullable
@@ -79,15 +81,12 @@ public class JournalFragment extends Fragment{
         journalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ArticleFragment fragment = new ArticleFragment();
-                fragment.getArticlesForJournal(((Journal)view.getTag()).getIssn());
-                try {
-                    MainActivity.INSTANCE.goToFragment(fragment);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                activity.goToArticleActivity(((Journal)view.getTag()));
             }
         });
     }
 
+    public void setActivity(JournalActivity activity) {
+        this.activity = activity;
+    }
 }

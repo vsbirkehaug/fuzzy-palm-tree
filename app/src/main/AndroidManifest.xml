@@ -24,10 +24,12 @@
             </intent-filter>
             <intent-filter>
                 <action android:name=".main.MainActivity"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
             <intent-filter>
                 <action android:name=".register.RegisterActivity"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
@@ -52,7 +54,6 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value=".register.RegisterActivity"/>
         </activity>
-
         <activity
                 android:name=".register.JournalPicker"
                 android:label="@string/title_activity_register"
@@ -63,8 +64,27 @@
 
             <intent-filter>
                 <action android:name=".main.MainActivity"/>
+
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+        </activity>
+        <activity
+                android:name=".journal.JournalActivity"
+                android:label="@string/title_activity_journal"
+                android:parentActivityName=".main.MainActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="artrec.com.artrec.main.MainActivity"/>
+        </activity>
+        <activity
+                android:name=".article.ArticleActivity"
+                android:label="@string/title_activity_article"
+                android:parentActivityName=".journal.JournalActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="artrec.com.artrec.journal.JournalActivity"/>
         </activity>
     </application>
 

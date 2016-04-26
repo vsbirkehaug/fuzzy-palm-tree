@@ -46,4 +46,6 @@
     <string name="error_username_exists">Username already taken.</string>
     <string name="username_available">Username available.</string>
     <string name="projects">Projects</string>
+    <string name="title_activity_journal">JournalActivity</string>
+    <string name="title_activity_article">ArticleActivity</string>
 </resources>
