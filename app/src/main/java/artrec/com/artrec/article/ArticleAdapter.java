@@ -49,7 +49,7 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         } else {
             viewHolder.articlePublicationDate.setText(getItem(position).getPublicationDate());
         }
-        convertView.setTag(viewHolder);
+        convertView.setTag(getItem(position));
 
         return convertView;
     }

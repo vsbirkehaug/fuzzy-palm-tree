@@ -3,10 +3,12 @@ package artrec.com.artrec.project;
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Keyword;
 import artrec.com.artrec.models.Project;
 import artrec.com.artrec.server.APICall;
+import com.sun.jna.platform.win32.WinDef;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -40,22 +42,28 @@ public class GetArticlesForProjectAsyncTask extends APICall{
     @Override
     protected void onPostExecute(String result) {
 
-
         try {
             resultJsonArray = new JSONArray(result);
 
             ArrayList<Article> articles = new ArrayList<>();
 
             for (int i = 0; i < resultJsonArray.length(); i++) {
-                articles.add(new Article(
-                        replaceChars(resultJsonArray.getJSONObject(i).getString("title")),
-                        replaceChars(resultJsonArray.getJSONObject(i).getString("link")),
-                        replaceChars(resultJsonArray.getJSONObject(i).getString("publicationDate"))));
+                if(resultJsonArray.getJSONObject(i).has("publicationDate")) {
+                    articles.add(new Article(
+                            resultJsonArray.getJSONObject(i).getInt("idArticle"),
+                            replaceChars(resultJsonArray.getJSONObject(i).getString("title")),
+                            replaceChars(resultJsonArray.getJSONObject(i).getString("publicationDate"))));
+                } else {
+                    articles.add(new Article(
+                            resultJsonArray.getJSONObject(i).getInt("idArticle"),
+                            replaceChars(resultJsonArray.getJSONObject(i).getString("title"))));
+                }
             }
 
             fragment.setArticleList(articles);
         } catch (JSONException e) {
             e.printStackTrace();
+            Toast.makeText(fragment.getContext(), "Error fetching results.", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -48,9 +48,11 @@ public class ArticleFragment extends Fragment {
 
         articleList = (ListView) view.findViewById(R.id.articleListView);
 
+/*
         if(articles != null) {
             articleList.setAdapter(new ArticleAdapter(getInstance().getContext(), 0, articles));
         }
+*/
 
         searchFilter = (EditText) view.findViewById(R.id.articleSearchFilterEditText);
         searchFilter.addTextChangedListener(new TextWatcher() {
@@ -76,21 +78,32 @@ public class ArticleFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+
+            if (articles != null && articles.size() > 0) {
+                adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
+                articleList.setAdapter(adapter);
+            } else {
+                articleList.setVisibility(GONE);
+                TextView text = new TextView(getContext());
+                text.setText("No articles found.");
+                text.setTextSize(16f);
+                ((LinearLayout) getView()).addView(text);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public void getArticlesForJournal(String issn) {
         new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
     }
 
     public void setArticleList(ArrayList<Article> resultArticles) {
         articles = resultArticles;
-        if(articles.size() > 0) {
-            adapter = new ArticleAdapter(getInstance().getContext(), 0, resultArticles);
-            articleList.setAdapter(adapter);
-        } else {
-            articleList.setVisibility(GONE);
-            TextView text = new TextView(getContext());
-            text.setText("No articles found for this journal.");
-            text.setTextSize(16f);
-            ((LinearLayout)getView()).addView(text);
-        }
+
     }
 }

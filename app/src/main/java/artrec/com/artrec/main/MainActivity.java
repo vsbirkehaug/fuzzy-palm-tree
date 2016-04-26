@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity
                     fragmentClass = ProjectFragment.class;
                     getSupportActionBar().setTitle(getString(R.string.projects));
                     fragment = (Fragment) fragmentClass.newInstance();
-                    fab.setBackground(getDrawable(R.drawable.ic_add_white_48dp));
+                    fab.setImageResource(R.drawable.ic_add_white_48dp);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {

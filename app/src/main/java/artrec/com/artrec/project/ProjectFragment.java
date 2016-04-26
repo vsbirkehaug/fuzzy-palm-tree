@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -48,9 +49,9 @@ public class ProjectFragment extends Fragment {
         final View view = inflater.inflate(R.layout.project_fragment, container, false);
 
         projectList = (ListView) view.findViewById(R.id.projectListView);
-        projectList.setOnClickListener(new View.OnClickListener() {
+        projectList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
                     Project project = (Project) view.getTag();
                     GetArticlesForProjectAsyncTask task = new GetArticlesForProjectAsyncTask(getActivity(), INSTANCE);

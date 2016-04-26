@@ -6,6 +6,11 @@ import java.util.Date;
  * Created by Vilde on 23.04.2016.
  */
 public class Article {
+    public Article(int idArticle, String title) {
+        this.id = idArticle;
+        this.title = title;
+    }
+
     public int getId() {
         return id;
     }
@@ -51,6 +56,12 @@ public class Article {
     public Article(String title, String link, String publicationDate) {
         this.title = title;
         this.link = link;
+        this.publicationDate = publicationDate;
+    }
+
+    public Article(int id, String title, String publicationDate) {
+        this.id = id;
+        this.title = title;
         this.publicationDate = publicationDate;
     }
 
