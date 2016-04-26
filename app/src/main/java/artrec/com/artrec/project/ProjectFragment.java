@@ -30,7 +30,7 @@ public class ProjectFragment extends Fragment {
     private ArrayList<Project> projects;
     private final static String url = MainActivity.APIURL+"getProjectsForUser";
     private ListView projectList;
-    private final static String articleUrl = MainActivity.APIURL+"getArticlesForProject";
+    private ProjectActivity activity;
 
     public ProjectFragment() {
         INSTANCE = this;
@@ -53,12 +53,8 @@ public class ProjectFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    Project project = (Project) view.getTag();
-                    GetArticlesForProjectAsyncTask task = new GetArticlesForProjectAsyncTask(getActivity(), INSTANCE);
-                    task.setProject(project);
-                    task.execute(articleUrl);
-
-                } catch (Exception ex) {
+                    activity.goToArticleActivity(((Project)view.getTag()).getId());
+                    } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -95,5 +91,9 @@ public class ProjectFragment extends Fragment {
         fragment.setArticleList(articleList);
         MainActivity.INSTANCE.goToFragment(fragment);
 
+    }
+
+    public void setActivity(ProjectActivity activity) {
+        this.activity = activity;
     }
 }

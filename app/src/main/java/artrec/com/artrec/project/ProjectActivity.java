@@ -1,20 +1,21 @@
-package artrec.com.artrec.article;
+package artrec.com.artrec.project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import artrec.com.artrec.R;
+import artrec.com.artrec.article.ArticleActivity;
 
-public class ArticleActivity extends AppCompatActivity {
+public class ProjectActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article);
+        setContentView(R.layout.activity_project);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -28,18 +29,17 @@ public class ArticleActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ArticleFragment fragment = (ArticleFragment)getSupportFragmentManager().getFragments().get(0);
+        ProjectFragment fragment = (ProjectFragment)getSupportFragmentManager().getFragments().get(0);
         fragment.setActivity(this);
-
-        loadArticles(fragment);
     }
 
-    private void loadArticles(ArticleFragment fragment) {
-        if(getIntent().hasExtra("issn")) {
-            fragment.getArticlesForJournal(getIntent().getStringExtra("issn"));
-        } else if (getIntent().hasExtra("projectid")) {
-            fragment.getArticlesForProject(getIntent().getIntExtra("projectid", -1));
+    public void goToArticleActivity(int projectId) {
+        try {
+            Intent intent = new Intent(this, ArticleActivity.class);
+            intent.putExtra("projectid", projectId);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-
 }

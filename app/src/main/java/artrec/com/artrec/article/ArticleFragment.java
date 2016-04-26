@@ -12,6 +12,7 @@ import android.widget.*;
 import artrec.com.artrec.R;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
+import artrec.com.artrec.project.GetArticlesForProjectAsyncTask;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -25,10 +26,12 @@ public class ArticleFragment extends Fragment {
 
     public static ArticleFragment INSTANCE;
     private ArrayList<Article> articles;
-    private final static String url = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
+    private final static String journalArticleUrl = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
+    private final static String projectArticleUrl = MainActivity.APIURL+"getArticlesForProject";
     private ListView articleList;
     private EditText searchFilter;
     private ArticleAdapter adapter;
+    private ArticleActivity activity;
 
     public ArticleFragment() {
         INSTANCE = this;
@@ -79,7 +82,7 @@ public class ArticleFragment extends Fragment {
     }
 
     public void getArticlesForJournal(String issn) {
-        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(url+issn);
+        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(journalArticleUrl +issn);
     }
 
     public void setArticleList(ArrayList<Article> resultArticles) {
@@ -89,7 +92,6 @@ public class ArticleFragment extends Fragment {
 
     private void refreshArticles() {
         try {
-
             if (articles != null && articles.size() > 0) {
                 adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
                 articleList.setAdapter(adapter);
@@ -103,5 +105,15 @@ public class ArticleFragment extends Fragment {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    public void getArticlesForProject(int projectid) {
+        GetArticlesForProjectAsyncTask task = new GetArticlesForProjectAsyncTask(activity, this);
+        task.setProjectId(projectid);
+        task.execute(projectArticleUrl);
+    }
+
+    public void setActivity(ArticleActivity activity) {
+        this.activity = activity;
     }
 }

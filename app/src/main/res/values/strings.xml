@@ -48,4 +48,6 @@
     <string name="projects">Projects</string>
     <string name="title_activity_journal">JournalActivity</string>
     <string name="title_activity_article">ArticleActivity</string>
+    <string name="title_activity_project">ProjectActivity</string>
+    <string name="log_out">Log out</string>
 </resources>

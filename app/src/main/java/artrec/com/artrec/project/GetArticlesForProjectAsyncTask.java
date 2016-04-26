@@ -2,8 +2,10 @@ package artrec.com.artrec.project;
 
 import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.ShareCompat;
 import android.util.Log;
 import android.widget.Toast;
+import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Keyword;
 import artrec.com.artrec.models.Project;
@@ -18,10 +20,10 @@ import java.util.ArrayList;
  * Created by Vilde on 25.04.2016.
  */
 public class GetArticlesForProjectAsyncTask extends APICall{
-    private ProjectFragment fragment;
-    private Project project;
+    private ArticleFragment fragment;
+    private int projectId;
 
-    public GetArticlesForProjectAsyncTask(FragmentActivity activity, ProjectFragment fragment) {
+    public GetArticlesForProjectAsyncTask(FragmentActivity activity, ArticleFragment fragment) {
         super(activity);
         this.fragment = fragment;
     }
@@ -29,7 +31,8 @@ public class GetArticlesForProjectAsyncTask extends APICall{
     @Override
     protected String doInBackground(String... urls) {
 
-        String thisResult = GETFORUSER(urls[0], project.getId());
+        Log.i("vilde", "Project ID: " + projectId);
+        String thisResult = GETFORUSER(urls[0], projectId);
 
         Log.i("vilde", "Result: " + thisResult);
 
@@ -72,7 +75,7 @@ public class GetArticlesForProjectAsyncTask extends APICall{
         return string.replace("[", "").replace("]", "").replace("\"", "").replace("\\n", "");
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(int projectId) {
+        this.projectId = projectId;
     }
 }

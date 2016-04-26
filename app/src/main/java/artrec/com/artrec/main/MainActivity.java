@@ -1,11 +1,14 @@
 package artrec.com.artrec.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,11 +20,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.journal.JournalActivity;
 import artrec.com.artrec.journal.JournalFragment;
 import artrec.com.artrec.login.LoginActivity;
+import artrec.com.artrec.project.ProjectActivity;
 import artrec.com.artrec.project.ProjectFragment;
 
 public class MainActivity extends AppCompatActivity
@@ -45,8 +50,10 @@ public class MainActivity extends AppCompatActivity
         INSTANCE = this;
         Intent intent = getIntent();
 
-        this.userId = intent.getIntExtra("userid", 0);
-        this.username = intent.getStringExtra("username");
+        if(intent.hasExtra("userid"))
+            this.userId = intent.getIntExtra("userid", 0);
+        if(intent.hasExtra("username"))
+            this.username = intent.getStringExtra("username");
 
         if(userId == 0) {
             Intent newIntent = new Intent(this, LoginActivity.class);
@@ -92,13 +99,28 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private boolean doubleBackToExitPressedOnce = false;
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                this.finish();
+                return;
+            }
+
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, "Please click BACK again to log out.", Toast.LENGTH_SHORT).show();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
         }
     }
 
@@ -118,11 +140,29 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            doLogoutConfirmation();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void doLogoutConfirmation() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Logging out")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -145,27 +185,20 @@ public class MainActivity extends AppCompatActivity
                    /* fragmentClass = JournalFragment.class;
                     fragment = (Fragment) fragmentClass.newInstance();
                     getSupportActionBar().setTitle(getString(R.string.journals));*/
-                    Intent intent = new Intent(this, JournalActivity.class);
-                    intent.putExtra("userid", userId);
-                    intent.putExtra("username", username);
-                    startActivity(intent);
+                    Intent journalIntent = new Intent(this, JournalActivity.class);
+                    journalIntent.putExtra("userid", userId);
+                    journalIntent.putExtra("username", username);
+                    startActivity(journalIntent);
                     break;
                 case R.id.nav_manage:
                     fragmentClass = JournalFragment.class;
                     getSupportActionBar().setTitle(getString(R.string.settings));
                     break;
                 case R.id.nav_projects:
-                    fragmentClass = ProjectFragment.class;
-                    getSupportActionBar().setTitle(getString(R.string.projects));
-                    fragment = (Fragment) fragmentClass.newInstance();
-                    fab.setImageResource(R.drawable.ic_add_white_48dp);
-                    fab.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-
+                    Intent projectIntent = new Intent(this, ProjectActivity.class);
+                    projectIntent.putExtra("userid", userId);
+                    projectIntent.putExtra("username", username);
+                    startActivity(projectIntent);
                     break;
                 default:
                     fragmentClass = JournalFragment.class;
