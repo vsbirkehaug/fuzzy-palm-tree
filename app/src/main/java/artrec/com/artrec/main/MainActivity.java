@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
     String username;
     private static boolean journalSaveDone = false;
     private static boolean subjectSaveDone = false;
-    public static final String APIURL = "http://192.168.0.13:8080/ArtRec/api/v1/";
+    public static final String APIURL = "http://192.168.43.67:8080/ArtRec/api/v1/";
     FrameLayout contentFrame;
     FloatingActionButton fab;
 

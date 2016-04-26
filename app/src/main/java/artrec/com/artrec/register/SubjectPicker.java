@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import artrec.com.artrec.R;
+import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.models.SubjectListItem;
@@ -65,7 +66,7 @@ public class SubjectPicker extends AppCompatActivity {
         });
 
         if(results == null) {
-            String url = "http://192.168.0.13:8080/ArtRec/api/v1/getAllSubjects";
+            String url = MainActivity.APIURL+"getAllSubjects";
             new GetSubjectsAsyncTask(this).execute(url);
         } else {
             handleResults(results);

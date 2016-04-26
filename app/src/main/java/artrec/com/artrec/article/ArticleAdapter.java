@@ -62,7 +62,6 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         try {
             if (keywords != null) {
                 for(String s : keywords) {
-                    Log.i("vilde", "Keyword: " + s);
                     int ofe = viewHolder.articleTitle.getText().toString().indexOf(s, 0);
                     Spannable WordtoSpan = new SpannableString(viewHolder.articleTitle.getText());
                     for (int ofs = 0; ofs < getItem(position).getTitle().length() && ofe != -1; ofs = ofe + 1) {
