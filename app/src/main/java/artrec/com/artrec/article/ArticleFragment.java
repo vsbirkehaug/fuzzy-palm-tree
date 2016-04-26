@@ -12,6 +12,7 @@ import android.widget.*;
 import artrec.com.artrec.R;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
+import artrec.com.artrec.models.Keyword;
 import artrec.com.artrec.project.GetArticlesForProjectAsyncTask;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ArticleFragment extends Fragment {
     private ArticleAdapter adapter;
     private ArticleActivity activity;
     private ArrayList<String> keywords;
+    private TextView keywordTextView;
 
     public ArticleFragment() {
         INSTANCE = this;
@@ -50,6 +52,8 @@ public class ArticleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.article_fragment, container, false);
 
+
+        keywordTextView = (TextView) view.findViewById(R.id.projectKeywordsTextView);
         articleList = (ListView) view.findViewById(R.id.articleListView);
 
         searchFilter = (EditText) view.findViewById(R.id.articleSearchFilterEditText);
@@ -95,8 +99,10 @@ public class ArticleFragment extends Fragment {
         try {
             if (articles != null && articles.size() > 0) {
                 if(keywords != null) {
+                    keywordTextView.setVisibility(View.VISIBLE);
                     adapter = new ArticleAdapter(getInstance().getContext(), 0, articles, keywords);
                 } else {
+                    keywordTextView.setVisibility(View.GONE);
                     adapter = new ArticleAdapter(getInstance().getContext(), 0, articles);
                 }
 
@@ -125,6 +131,24 @@ public class ArticleFragment extends Fragment {
 
     public void setKeywords(ArrayList<String> keywords) {
         this.keywords = keywords;
+        keywordTextView.setText("Keywords: "+ getKeywordsString());
         refreshArticles();
+    }
+
+
+    public String getKeywordsString() {
+        if (keywords.size() > 0) {
+            StringBuilder nameBuilder = new StringBuilder();
+
+            for (String kw : keywords) {
+                nameBuilder.append(kw).append(", ");
+            }
+
+            nameBuilder.deleteCharAt(nameBuilder.length() - 2);
+
+            return nameBuilder.toString();
+        } else {
+            return "";
+        }
     }
 }
