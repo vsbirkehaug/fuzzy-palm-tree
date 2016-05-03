@@ -16,6 +16,7 @@ import artrec.com.artrec.article.ArticleFragment;
 import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Project;
+import artrec.com.artrec.server.APICallURLs;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class ProjectFragment extends Fragment {
 
     public static ProjectFragment INSTANCE;
     private ArrayList<Project> projects;
-    private final static String url = MainActivity.APIURL+"getProjectsForUser";
     private ListView projectList;
     private ProjectActivity activity;
 
@@ -70,7 +70,7 @@ public class ProjectFragment extends Fragment {
     }
 
     private void getProjectsForUser(int userId) {
-        new GetProjectsForUserAsyncTask(getActivity(), this).execute(url, String.valueOf(userId));
+        new GetProjectsForUserAsyncTask(getActivity(), this).execute(APICallURLs.getProjectsForUser(), String.valueOf(userId));
     }
 
     void setProjectList(ArrayList<Project> resultArticles) {

@@ -13,6 +13,7 @@ import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.JournalListItem;
 import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.models.SubjectListItem;
+import artrec.com.artrec.server.APICallURLs;
 
 import java.util.ArrayList;
 
@@ -104,10 +105,9 @@ public class JournalPicker extends AppCompatActivity {
         });
 
         if(results == null) {
-            String url = MainActivity.APIURL+"getJournalsForSubjects";
             GetJournalsForSubjectsAsyncTask call = new GetJournalsForSubjectsAsyncTask(this);
             call.setParameters(subjectIds);
-            call.execute(url);
+            call.execute(APICallURLs.getJournalsForSubjects());
         } else {
             handleResults(results);
         }
@@ -116,11 +116,11 @@ public class JournalPicker extends AppCompatActivity {
     private void saveSubjectsAndJournals() {
         PostUserSubjectsAsyncTask uSubjects = new PostUserSubjectsAsyncTask(this);
         uSubjects.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), subjectIds);
-        uSubjects.execute(MainActivity.APIURL+"userSubject");
+        uSubjects.execute(APICallURLs.postUserSubject());
 
         PostUserJournalsAsyncTask uJournals = new PostUserJournalsAsyncTask(this);
         uJournals.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), getIdsFromJournals());
-        uJournals.execute(MainActivity.APIURL+"userJournal");
+        uJournals.execute(APICallURLs.postUserJournal());
     }
 
     @Override

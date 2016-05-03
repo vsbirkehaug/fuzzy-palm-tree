@@ -14,6 +14,7 @@ import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.Article;
 import artrec.com.artrec.models.Keyword;
 import artrec.com.artrec.project.GetArticlesForProjectAsyncTask;
+import artrec.com.artrec.server.APICallURLs;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -27,8 +28,7 @@ public class ArticleFragment extends Fragment {
 
     public static ArticleFragment INSTANCE;
     private ArrayList<Article> articles;
-    private final static String journalArticleUrl = MainActivity.APIURL+"getAllArticlesForJournal?issn=";
-    private final static String projectArticleUrl = MainActivity.APIURL+"getArticlesForProject";
+
     private ListView articleList;
     private EditText searchFilter;
     private ArticleAdapter adapter;
@@ -87,7 +87,7 @@ public class ArticleFragment extends Fragment {
     }
 
     public void getArticlesForJournal(String issn) {
-        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(journalArticleUrl +issn);
+        new GetArticlesForJournalAsyncTask(getActivity(), this).execute(APICallURLs.getArticlesForJournal(issn));
     }
 
     public void setArticleList(ArrayList<Article> resultArticles) {
@@ -122,7 +122,7 @@ public class ArticleFragment extends Fragment {
     public void getArticlesForProject(int projectid) {
         GetArticlesForProjectAsyncTask task = new GetArticlesForProjectAsyncTask(activity, this);
         task.setProjectId(projectid);
-        task.execute(projectArticleUrl);
+        task.execute(APICallURLs.getArticlesForProject());
     }
 
     public void setActivity(ArticleActivity activity) {
