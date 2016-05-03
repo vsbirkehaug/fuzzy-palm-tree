@@ -51,11 +51,11 @@ public class GetArticlesForProjectAsyncTask extends APICall{
             ArrayList<Article> articles = new ArrayList<>();
 
             for (int i = 0; i < resultJsonArray.length(); i++) {
-                if(resultJsonArray.getJSONObject(i).has("publicationDate")) {
+                if(resultJsonArray.getJSONObject(i).has("date")) {
                     articles.add(new Article(
                             resultJsonArray.getJSONObject(i).getInt("idArticle"),
                             replaceChars(resultJsonArray.getJSONObject(i).getString("title")),
-                            replaceChars(resultJsonArray.getJSONObject(i).getString("publicationDate"))));
+                            replaceChars(resultJsonArray.getJSONObject(i).getString("date"))));
                 } else {
                     articles.add(new Article(
                             resultJsonArray.getJSONObject(i).getInt("idArticle"),
