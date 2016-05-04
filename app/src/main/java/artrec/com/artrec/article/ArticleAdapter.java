@@ -62,11 +62,11 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         try {
             if (keywords != null) {
                 for(String s : keywords) {
-                    int ofe = viewHolder.articleTitle.getText().toString().indexOf(s, 0);
+                    int ofe = viewHolder.articleTitle.getText().toString().toLowerCase().indexOf(s.toLowerCase(), 0);
                     Spannable WordtoSpan = new SpannableString(viewHolder.articleTitle.getText());
                     for (int ofs = 0; ofs < getItem(position).getTitle().length() && ofe != -1; ofs = ofe + 1) {
 
-                        ofe = getItem(position).getTitle().indexOf(s, ofs);
+                        ofe = getItem(position).getTitle().toLowerCase().indexOf(s.toLowerCase(), ofs);
                         if (ofe == -1)
                             break;
                         else {

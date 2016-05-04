@@ -2,12 +2,14 @@ package artrec.com.artrec.server;
 
 import artrec.com.artrec.main.MainActivity;
 
+import java.net.URI;
+
 /**
  * Created by Vilde on 03.05.2016.
  */
 public class APICallURLs {
 
-    private static final String APIURL = "http://192.168.0.13:8080/ArtRec/api/v1/";
+    private static final String APIURL = "http://192.168.0.11:8080/ArtRec/api/v1/";
 
     public static String getUserExists() {
         return APIURL.concat("userexists");
@@ -47,5 +49,13 @@ public class APICallURLs {
 
     public static String getJournals() {
         return APIURL.concat("getJournals");
+    }
+
+    public static String getUser() {
+        return APIURL.concat("user");
+    }
+
+    public static String getSubjects() {
+        return APIURL.concat("getSubjects");
     }
 }
