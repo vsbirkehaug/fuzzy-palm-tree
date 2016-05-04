@@ -7,10 +7,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import artrec.com.artrec.R;
-import artrec.com.artrec.main.MainActivity;
-import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.models.SubjectListItem;
+import artrec.com.artrec.server.APICallURLs;
 
 import java.util.ArrayList;
 
@@ -66,8 +65,7 @@ public class SubjectPicker extends AppCompatActivity {
         });
 
         if(results == null) {
-            String url = MainActivity.APIURL+"getAllSubjects";
-            new GetSubjectsAsyncTask(this).execute(url);
+            new GetSubjectsAsyncTask(this).execute(APICallURLs.getSubjects());
         } else {
             handleResults(results);
         }

@@ -35,6 +35,7 @@ import artrec.com.artrec.main.MainActivity;
 import artrec.com.artrec.models.User;
 import artrec.com.artrec.register.RegisterActivity;
 import artrec.com.artrec.server.APICall;
+import artrec.com.artrec.server.APICallURLs;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -210,7 +211,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(true);
             mAuthTask = new AuthenticateUserAsyncCall(this);
             mAuthTask.setCredentials(username, password);
-            mAuthTask.execute(MainActivity.APIURL+"user");
+            mAuthTask.execute(APICallURLs.authenticateUser());
         }
     }
 

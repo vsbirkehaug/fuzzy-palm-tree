@@ -200,7 +200,7 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
 
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpGet get = new HttpGet(MainActivity.APIURL+"user");
+            HttpGet get = new HttpGet(APICallURLs.getUser());
 
             get.addHeader("username", java.net.URLEncoder.encode(username, "UTF-8"));
             get.addHeader("password", java.net.URLEncoder.encode(passwordHash, "UTF-8"));
@@ -236,7 +236,7 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
 //            localContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
             HttpClient httpclient = new DefaultHttpClient();
 
-            HttpPost post = new HttpPost(MainActivity.APIURL+"user");
+            HttpPost post = new HttpPost(APICallURLs.postUser());
             ArrayList<NameValuePair> params = new ArrayList<>();
             params.add(new BasicNameValuePair("username", java.net.URLEncoder.encode(username, "UTF-8")));
             params.add(new BasicNameValuePair("password",  java.net.URLEncoder.encode(passwordHash, "UTF-8")));

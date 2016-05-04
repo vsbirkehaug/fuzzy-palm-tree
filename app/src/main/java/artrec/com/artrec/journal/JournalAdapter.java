@@ -53,11 +53,11 @@ public class JournalAdapter extends ArrayAdapter<Journal> {
         viewHolder.journalTitle.setText(getItem(position).getTitle());
         try {
             if (charText.length() > 0) {
-                int ofe = viewHolder.journalTitle.getText().toString().indexOf(charText, 0);
+                int ofe = viewHolder.journalTitle.getText().toString().toLowerCase().indexOf(charText.toLowerCase(), 0);
                 Spannable WordtoSpan = new SpannableString(viewHolder.journalTitle.getText());
                 for (int ofs = 0; ofs < getItem(position).getTitle().length() && ofe != -1; ofs = ofe + 1) {
 
-                    ofe = getItem(position).getTitle().indexOf(charText, ofs);
+                    ofe = getItem(position).getTitle().toLowerCase().indexOf(charText.toLowerCase(), ofs);
                     if (ofe == -1)
                         break;
                     else {
