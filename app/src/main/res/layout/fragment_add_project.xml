@@ -14,15 +14,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title"
                 android:padding="10dp"
+                android:labelFor="@+id/newProjectTitle"
         />
 
         <EditText
+                android:layout_below="@id/titleLabel"
                 android:id="@+id/newProjectTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"/>
 
         <TextView
+                android:layout_below="@id/newProjectTitle"
                 android:id="@+id/keywordsLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,7 +33,14 @@
                 android:padding="10dp"
         />
 
+        <EditText
+                android:id="@+id/keywordFilter"
+                android:layout_below="@id/keywordsLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
         <ListView
+                android:layout_below="@id/keywordFilter"
                 android:id="@+id/newProjectKeywordsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -38,5 +48,23 @@
         </ListView>
 
 
+        <RelativeLayout
+                android:layout_below="@id/newProjectKeywordsList"
+                android:id="@+id/keyword_bottom_menu"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone"
+        >
+
+            <Button
+                    android:id="@+id/keyword_next_button"
+                    android:text="@string/create_project"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+            />
+
+        </RelativeLayout>
     </RelativeLayout>
+
 </FrameLayout>

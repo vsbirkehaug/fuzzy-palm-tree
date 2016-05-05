@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import artrec.com.artrec.R;
+import artrec.com.artrec.data.DataStore;
 import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.models.SubjectListItem;
 import artrec.com.artrec.server.APICallURLs;
@@ -56,11 +57,7 @@ public class SubjectPicker extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(subjectPicker, JournalPicker.class);
-                intent.putExtra("userid", getIntent().getIntExtra("userid", 0));
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                intent.putExtra("ids", getIdsFromSubjects());
-                startActivity(intent);
+                doNext();
             }
         });
 
@@ -69,6 +66,15 @@ public class SubjectPicker extends AppCompatActivity {
         } else {
             handleResults(results);
         }
+    }
+
+    private void doNext() {
+        DataStore.getInstance().setSelectedSubjects(selectedSubjects);
+        Intent intent = new Intent(this, JournalPicker.class);
+        intent.putExtra("userid", getIntent().getIntExtra("userid", 0));
+        intent.putExtra("username", getIntent().getStringExtra("username"));
+        intent.putExtra("ids", getIdsFromSubjects());
+        startActivity(intent);
     }
 
     private int[] getIdsFromSubjects() {
@@ -104,7 +110,6 @@ public class SubjectPicker extends AppCompatActivity {
                     } else {
                         selectedSubjects.remove(item.getSubject());
                     }
-
 
                     setBottomMenuShowing(selectedSubjects.size() > 0);
 

@@ -1,6 +1,5 @@
 package artrec.com.artrec.journal;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,15 +13,10 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import artrec.com.artrec.R;
-import artrec.com.artrec.article.ArticleActivity;
-import artrec.com.artrec.article.ArticleFragment;
-import artrec.com.artrec.main.MainActivity;
-import artrec.com.artrec.models.Article;
+import artrec.com.artrec.data.DataStore;
 import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.server.APICallURLs;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -70,13 +64,13 @@ public class JournalFragment extends Fragment{
         GetJournalsForUserAsyncTask task = new GetJournalsForUserAsyncTask(getActivity(), this);
         Log.i("vilde", "userid getting journals: " + getActivity().getIntent().getIntExtra("userid", 0));
         task.setUser(getActivity().getIntent().getIntExtra("userid", 0));
-        task.execute(APICallURLs.getJournals());
+        task.execute(APICallURLs.getJournalsForUser());
 
         return view;
     }
 
-    void setJournalListView(ArrayList<Journal> journals) {
-        adapter = new JournalAdapter(this.getContext(), 0, journals);
+    void setJournalListView() {
+        adapter = new JournalAdapter(this.getContext(), 0, DataStore.getInstance().getJournals());
         journalListView.setAdapter(adapter);
         journalListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -1,8 +1,10 @@
 package artrec.com.artrec.journal;
 
 import android.app.Activity;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
+import artrec.com.artrec.data.DataStore;
 import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.server.APICall;
 import org.json.JSONArray;
@@ -21,6 +23,10 @@ public class GetJournalsForUserAsyncTask extends APICall {
     public GetJournalsForUserAsyncTask(Activity parent, JournalFragment fragment) {
         super(parent);
         this.fragment = fragment;
+    }
+
+    public GetJournalsForUserAsyncTask(Activity parent) {
+        super(parent);
     }
 
     public void setUser(int userId) {
@@ -71,14 +77,18 @@ public class GetJournalsForUserAsyncTask extends APICall {
                 }catch (JSONException ex) {
                     ex.printStackTrace();
                 }
-                fragment.setJournalListView(journals);
+
+                DataStore.getInstance().setSelectedJournals(journals);
+                if(fragment != null) {
+                    fragment.setJournalListView();
+                }
+
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Toast.makeText(parent.getBaseContext(), "Received!", Toast.LENGTH_SHORT).show();
-
 
     }
 

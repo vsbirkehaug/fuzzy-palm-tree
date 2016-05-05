@@ -18,6 +18,10 @@
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/settings"/>
+        <item
+                android:id="@+id/nav_resetup"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="@string/setup_again"/>
     </group>
 
 </menu>

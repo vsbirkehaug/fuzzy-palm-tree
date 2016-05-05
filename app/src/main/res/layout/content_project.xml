@@ -13,12 +13,11 @@
         tools:showIn="@layout/activity_project"
         tools:context="artrec.com.artrec.project.ProjectActivity">
 
-    <fragment
+    <FrameLayout
             android:id="@+id/projectActivityFragment"
             android:name="artrec.com.artrec.project.ProjectFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            class="artrec.com.artrec.project.ProjectFragment"
             tools:layout="@layout/project_fragment"/>
 
 </RelativeLayout>

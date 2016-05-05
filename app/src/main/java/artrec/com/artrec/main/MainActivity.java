@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -23,24 +24,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 import artrec.com.artrec.R;
 import artrec.com.artrec.article.ArticleFragment;
+import artrec.com.artrec.data.DataStore;
 import artrec.com.artrec.journal.JournalActivity;
 import artrec.com.artrec.journal.JournalFragment;
 import artrec.com.artrec.login.LoginActivity;
+import artrec.com.artrec.models.Journal;
+import artrec.com.artrec.models.Subject;
 import artrec.com.artrec.project.ProjectActivity;
 import artrec.com.artrec.project.ProjectFragment;
+import artrec.com.artrec.register.SubjectPicker;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static MainActivity INSTANCE;
     private Menu optionsMenu;
-    NavigationView navigationView;
-    int userId;
-    String username;
+    private NavigationView navigationView;
+    private int userId;
+    private String username;
     private static boolean journalSaveDone = false;
     private static boolean subjectSaveDone = false;
-    FrameLayout contentFrame;
-    FloatingActionButton fab;
+    private FrameLayout contentFrame;
+    private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = getIntent();
 
         if(intent.hasExtra("userid"))
-            this.userId = intent.getIntExtra("userid", 0);
+            this.userId = intent.getIntExtra("userid", -1);
         if(intent.hasExtra("username"))
             this.username = intent.getStringExtra("username");
 
@@ -198,6 +206,15 @@ public class MainActivity extends AppCompatActivity
                     projectIntent.putExtra("userid", userId);
                     projectIntent.putExtra("username", username);
                     startActivity(projectIntent);
+                    break;
+                case R.id.nav_resetup:
+                    if(DataStore.getInstance().getJournals() == null || DataStore.getInstance().getSubjects() == null) {
+                        DataStore.getInstance().loadDataForUser(userId);
+                    }
+                    Intent setupIntent = new Intent(this, SubjectPicker.class);
+                    setupIntent.putExtra("userid", userId);
+                    setupIntent.putExtra("username", username);
+                    startActivity(setupIntent);
                     break;
                 default:
                     fragmentClass = JournalFragment.class;

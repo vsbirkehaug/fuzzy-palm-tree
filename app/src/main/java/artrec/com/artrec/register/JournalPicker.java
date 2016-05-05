@@ -2,7 +2,6 @@ package artrec.com.artrec.register;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -10,12 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.*;
 import artrec.com.artrec.R;
-import artrec.com.artrec.article.GetArticlesForJournalAsyncTask;
-import artrec.com.artrec.main.MainActivity;
+import artrec.com.artrec.data.DataStore;
 import artrec.com.artrec.models.Journal;
 import artrec.com.artrec.models.JournalListItem;
-import artrec.com.artrec.models.Subject;
-import artrec.com.artrec.models.SubjectListItem;
 import artrec.com.artrec.server.APICallURLs;
 
 import java.util.ArrayList;
@@ -125,6 +121,7 @@ public class JournalPicker extends AppCompatActivity {
         uSubjects.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), subjectIds);
         uSubjects.execute(APICallURLs.postUserSubject());
 
+        DataStore.getInstance().setSelectedJournals(this.selectedJournals);
         PostUserJournalsAsyncTask uJournals = new PostUserJournalsAsyncTask(this);
         uJournals.setUserAndLinks(getIntent().getStringExtra("username"), getIntent().getIntExtra("userid", 0), getIdsFromJournals());
         uJournals.execute(APICallURLs.postUserJournal());
@@ -157,7 +154,6 @@ public class JournalPicker extends AppCompatActivity {
 
         adapter = new JournalListAdapter(this, 0, items);
         listView.setAdapter(adapter);
-
 
     }
 

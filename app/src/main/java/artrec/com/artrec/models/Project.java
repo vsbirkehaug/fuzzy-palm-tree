@@ -50,6 +50,13 @@ public class Project {
         this.keywords = keywords;
     }
 
+    public Project(String title, int userId, ArrayList<Keyword> keywords) {
+        this.title = title;
+        this.userId = userId;
+        this.keywords = keywords;
+    }
+
+
     public Project(String title, int userId) {
 
         this.title = title;

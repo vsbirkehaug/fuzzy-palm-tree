@@ -54,4 +54,7 @@
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="keywords">Keywords</string>
+    <string name="clear_all">Clear all</string>
+    <string name="setup_again">Redo setup</string>
+    <string name="create_project">Create project</string>
 </resources>

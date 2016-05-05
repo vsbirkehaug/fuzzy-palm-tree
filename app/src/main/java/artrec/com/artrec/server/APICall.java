@@ -291,6 +291,38 @@ public abstract class APICall extends AsyncTask<String, Void, String>{
         return result;
     }
 
+    protected String POSTPROJECTLINKS(String url, int userid, String projectitle, int[]ids) {
+        InputStream inputStream;
+        String result = "";
+        try {
+
+            String idString = intArrayToString(ids);
+
+            HttpClient httpclient = new DefaultHttpClient();
+
+            HttpPost post = new HttpPost(url);
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("userid", java.net.URLEncoder.encode(String.valueOf(userid), "UTF-8")));
+            params.add(new BasicNameValuePair("title", java.net.URLEncoder.encode(String.valueOf(projectitle), "UTF-8")));
+            params.add(new BasicNameValuePair("ids", java.net.URLEncoder.encode(idString, "UTF-8")));
+            post.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
+            post.setHeader("Content-Type", "application/x-www-form-urlencoded");
+            HttpResponse httpResponse = httpclient.execute(post);
+
+            inputStream = httpResponse.getEntity().getContent();
+
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+                Log.i("vilde", "The json result is: " + result);
+            } else {
+                //TODO error handling
+            }
+
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+        return result;
+    }
 
 
     protected String convertInputStreamToString(InputStream inputStream) throws IOException {

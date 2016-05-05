@@ -12,7 +12,7 @@ import artrec.com.artrec.article.ArticleActivity;
 import artrec.com.artrec.models.Project;
 
 public class ProjectActivity extends AppCompatActivity {
-
+    FloatingActionButton fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,18 +20,29 @@ public class ProjectActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                goToAddFragment();
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ProjectFragment fragment = (ProjectFragment)getSupportFragmentManager().getFragments().get(0);
-        fragment.setActivity(this);
+        loadProjects();
+    }
+
+    private void goToAddFragment() {
+        try {
+            fab.setVisibility(View.GONE);
+            AddProjectFragment fragment = new AddProjectFragment();
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.projectActivityFragment, fragment).commitAllowingStateLoss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void goToArticleActivity(Project project) {
@@ -40,6 +51,18 @@ public class ProjectActivity extends AppCompatActivity {
             intent.putExtra("projectid", project.getId());
             intent.putExtra("keywords", project.getKeywordsAsStringArrayList());
             startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadProjects() {
+        try {
+            fab.setVisibility(View.VISIBLE);
+            ProjectFragment fragment = new ProjectFragment();
+            fragment.setActivity(this);
+            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().beginTransaction().replace(R.id.projectActivityFragment, fragment).commitAllowingStateLoss();
         } catch (Exception e) {
             e.printStackTrace();
         }
