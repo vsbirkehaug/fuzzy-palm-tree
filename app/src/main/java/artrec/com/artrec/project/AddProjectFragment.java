@@ -136,4 +136,8 @@ public class AddProjectFragment extends Fragment {
     public void doneCreating() {
         activity.loadProjects();
     }
+
+    public void setActivity(ProjectActivity activity) {
+        this.activity = activity;
+    }
 }

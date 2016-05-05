@@ -38,6 +38,7 @@ public class ProjectActivity extends AppCompatActivity {
         try {
             fab.setVisibility(View.GONE);
             AddProjectFragment fragment = new AddProjectFragment();
+            fragment.setActivity(this);
             getSupportFragmentManager().popBackStack();
             getSupportFragmentManager().beginTransaction().replace(R.id.projectActivityFragment, fragment).commitAllowingStateLoss();
         } catch (Exception e) {
